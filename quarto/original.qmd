@@ -1,0 +1,37 @@
+---
+title: "The original R Markdown file"
+format: html
+---
+
+This is the January 2025 analysis file that produced the published tables, figure and incidence rate ratios [@swaminathan2025hope]. It is kept for comparison: the [differences page](differences.qmd) lists each place where the rebuilt scripts depart from it, and why.
+
+::: callout-note
+## Edited for publication
+For patient privacy, three lines were changed. The intervention date and the identifier of one corrected record are commented out and replaced by `<removed for patient privacy>`. A file location on the analyst's computer is replaced by `<data folder>/`. The comment above the correction now gives its reason in general terms, "the recipient became ineligible before transplant". The header was also edited: a neutral title, the author's name spelled correctly, and the date of the file. Otherwise the file is unchanged. Because the removed values are needed, it does not run as shown.
+:::
+
+It is shown below as it would read when knitted, with its prose formatted, but nothing in it is run. Each code chunk is folded under a header giving its number, its label and options, and its line numbers in the file. Click a header to open that chunk, or use **Show All Code** in the **Code** menu at the top of the page to open them all.
+
+::: {.Rcode title="Source file"}
+-   [`original/original-analysis-2025-01-14.Rmd`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/original/original-analysis-2025-01-14.Rmd)
+:::
+
+```{r}
+#| include: false
+#| eval: true
+source("_site_functions.R")
+```
+
+## The file
+
+```{r}
+#| echo: false
+#| eval: true
+#| output: asis
+cat(rmd_as_markdown("../original/original-analysis-2025-01-14.Rmd"))
+```
+
+## References
+
+::: {#refs}
+:::

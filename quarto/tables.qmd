@@ -1,0 +1,137 @@
+---
+title: "Tables"
+format: html
+---
+
+Builds the published tables and saves them to the gitignored `tables/` folder. The tables carry the paper's labels, applied to copies of the data used only for display, so the labels cannot change a number.
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/tables.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/tables.R)
+
+This R script file is itself reliant on the following files:
+
+-   [`R/setup.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/setup.R)
+-   [`R/functions.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/functions.R)
+-   [`R/process_offers.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/process_offers.R)
+-   [`R/process_demographics.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/process_demographics.R)
+-   [`R/models.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/models.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/tables.R")
+```
+
+## Candidates and donors with offers
+
+The number of distinct candidates who received offers, and of distinct donors.
+
+```{r}
+#| label: count-candidates-and-donors
+#| eval: false
+```
+
+## Labels for the offer tables
+
+The paper's names for the periods, the acceptance categories and the refusal codes, in the default order, with a dagger on the four codes counted as potentially HIV-related, and the paper's row labels.
+
+```{r}
+#| label: display-labels-offers
+#| eval: false
+```
+
+## All offers
+
+Every offer, overall.
+
+```{r}
+#| label: table-offers-overall
+#| eval: false
+```
+
+## Table 2
+
+Offers by period, with tests by period. Match dates are shown as a range, as in the paper.
+
+```{r}
+#| label: table-offers-by-period
+#| eval: false
+```
+
+## Declined offers
+
+The same summary for declined offers only, showing only the categories present among them.
+
+```{r}
+#| label: table-declined-offers-by-period
+#| eval: false
+```
+
+## Declined organs transplanted elsewhere
+
+Among declined offers, whether the donor's organ was transplanted, by period and by whether the decline was potentially HIV-related.
+
+```{r}
+#| label: table-declined-transplanted-elsewhere
+#| eval: false
+```
+
+## Incidence rate ratios
+
+The two models as tables of incidence rate ratios, post- versus pre-intervention.
+
+```{r}
+#| label: table-transplant-rate-models
+#| eval: false
+```
+
+## Labels for the candidate tables
+
+End status in the paper's column order, categories as the paper prints them, and the paper's row labels. Cold ischemia time is labelled in hours.
+
+```{r}
+#| label: display-labels-demographics
+#| eval: false
+```
+
+## Supplemental Table 1
+
+Candidate characteristics by end status: medians (interquartile range) and counts (%), with gtsummary's default tests.
+
+```{r}
+#| label: table-candidate-characteristics
+#| eval: false
+```
+
+## Supplemental Table 2
+
+Donor and transplant characteristics among transplanted candidates, by whether the donor had HIV.
+
+```{r}
+#| label: table-donor-characteristics
+#| eval: false
+```
+
+## Not in the paper: means
+
+The original code also built Supplemental Tables 1 and 2 with means (SD), one-way ANOVA and t-tests. They were not published; they are kept, labelled, while [#4](https://github.com/VagishHemmige/hope-act-education-intervention/issues/4) is open.
+
+```{r}
+#| label: tables-means-not-in-paper
+#| eval: false
+```
+
+## Export
+
+HTML files in `tables/`, which stays out of Git until the decider has checked the tables against the paper and cleared them for release.
+
+```{r}
+#| label: save-tables
+#| eval: false
+```

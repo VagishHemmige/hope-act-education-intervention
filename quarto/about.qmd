@@ -1,0 +1,52 @@
+---
+title: "About"
+format: html
+---
+
+## The study
+
+Swaminathan N, Puius YA, Czeresnia J, Muggia VA, Azzi Y, Raees H, Akalin E, Hemmige V. Proof of concept that implementation of a multispecialty educational intervention may improve acceptance of organs from donors with HIV at a tertiary care hospital: a single-center study. *Transplant Infectious Disease*. 2025;e70039 [@swaminathan2025hope].
+
+-   **Neeraja Swaminathan** (first author)
+-   **Vagish Hemmige** (corresponding author, statistical analysis and this repository)
+
+Scientific decisions for this repository are made by Vagish Hemmige.
+
+## This repository
+
+This repository releases the code behind the published analysis, rebuilt from a single R Markdown file into scripts run in order by `R/main.R`. The study data are identifiable and covered by the IRB-approved study protocol; they are not in the repository, and the code reads them from a restricted folder on the computer of an authorized analyst. The values that could identify patients were removed from the code and are kept with the data.
+
+Contributions follow the rules in [`AGENTS.md`](agents.qmd); open decisions and known issues are tracked in [Issues](https://github.com/VagishHemmige/hope-act-education-intervention/issues).
+
+## How this website was created
+
+The site is built with [Quarto](https://quarto.org) from the analysis scripts themselves. Each page imports the labelled sections of its script from `R/` and shows them with an explanation; the site never runs the analysis, so it is built without the restricted study data.
+
+The repository was set up, and is maintained, with the [R Analysis Workflow](https://github.com/VagishHemmige/r-analysis-workflow) plugin for AI coding assistants (Claude and ChatGPT), written by Vagish Hemmige. The plugin provides the repository layout, the conventions for the analysis plan and `AGENTS.md`, and the format of these pages. AI assistants (Claude) drafted code, documentation and suggestions under the rules in `AGENTS.md`: code, documentation and synthetic data; the study data stayed on the maintainer's computer, and only published or summary outputs were shared with them for checking. Every scientific decision was made by the decider and recorded in a GitHub issue or in the analysis plan.
+
+Four documents describe the project. In short: the plan is the scientific intent, the architecture is the workflow as implemented, and `AGENTS.md` holds the rules for working together.
+
+-   [**Analysis plan**](analysis-plan.qmd): *what the analysis is meant to do, and why.* The question, the populations, the measures, the statistical methods, and the choices that need the investigators' judgment, with each open choice linked to its decision issue. Code implements it and does not redefine it.
+-   [**Architecture**](architecture.qmd): *how the code does it.* The scripts, the order they run in, what each needs and produces, and how data flow between them.
+-   [**AGENTS.md**](agents.qmd): *how people and AI assistants work on the project.* Rules for restricted data and patient privacy, coding, testing, proposing changes and getting a person's approval.
+-   [**Repository blueprint**](repository-blueprint.qmd): *the intended layout*, which the architecture document then describes as built.
+
+## Pages
+
+-   [**Clinical background**](background.qmd): transplantation from donors with HIV, and why the center's organs went unused.
+-   [**The original R Markdown file**](original.qmd): the January 2025 analysis, formatted, with each code chunk folded.
+-   [**Differences from the original code**](differences.qmd): every change for privacy, added check and removal, and every place where the paper and the code differ.
+-   [**Setup**](setup.qmd): packages, file locations, constants and the restricted values.
+-   [**Functions**](functions.qmd): tested helper functions.
+-   [**1. Loading the data**](load_data.qmd): the three study files.
+-   [**2. Person-days**](process_person_days.qmd): follow-up by day, periods and transplant days.
+-   [**3. Organ offers**](process_offers.qmd): duplicates, periods, derived measures, the link to study IDs and the correction.
+-   [**4. Candidate characteristics**](process_demographics.qmd): recipient, donor and transplant measures.
+-   [**5. Models**](models.qmd): the Poisson models of transplant rate.
+-   [**Tables**](tables.qmd) and [**Figures**](figures.qmd): building and exporting the outputs.
+-   [**Published results**](results.qmd): where to find them, and what the code reproduces.
+
+## References
+
+::: {#refs}
+:::

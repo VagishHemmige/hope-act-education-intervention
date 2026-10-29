@@ -1,0 +1,114 @@
+---
+title: "Differences from the original code"
+format: html
+---
+
+This page lists every way the rebuilt scripts differ from the [original R Markdown file](original.qmd) of January 2025, which produced the published results [@swaminathan2025hope], and every place where the paper's text differs from that code. Each entry is one of these kinds:
+
+-   **Privacy**: a value that could identify patients is kept with the restricted data instead of in the code, or an output is made no more precise than the published one.
+-   **Check added**: the rebuilt code stops with a clear message when the data are not as the published run needed. A check never changes a result.
+-   **Removed**: code that did nothing for the published results.
+-   **Display only**: how a table or figure looks, not what it contains.
+-   **Paper differs from code**: the paper describes something slightly differently from the code that produced its numbers. The rebuilt code follows the code, and the entry records the paper's wording.
+-   **Kept as in the original**: a choice the rebuilt code keeps, to reproduce the published numbers, although another would be better.
+-   **Open decision**: a choice for the decider, Vagish Hemmige, tracked in a GitHub issue.
+
+::: callout-note
+## Status
+Run on the study data by the maintainer, the rebuilt code reproduces the published incidence rate ratios (3.11, 95% CI 1.08 to 9.44; and 16.3, 2.90 to 305) and the published counts of declined offers and of the candidates in each group.
+:::
+
+## Privacy
+
+| Original code | Kind | Rebuilt code | Effect on published results |
+|---|---|---|---|
+| The intervention date, day 0 for both periods, was written in the code. With the exact date, the day offsets in the analysis and the timeline would give each patient's event dates. | Privacy | Read from a restricted file kept with the data (see [Setup](setup.qmd#restricted-values)). | None |
+| One accepted offer was recoded as a provisional acceptance, by its record identifier written in the code, because the recipient became ineligible before transplant. | Privacy | The correction is listed in a restricted file and applied by `apply_record_corrections()`, which stops if it matches no record or more than one. | None |
+| The patient timeline was saved as an interactive page that embeds every event at its exact day. | Privacy | Each event is moved by its own random shift of up to two days, never across day 0, from a seed kept with the restricted values. The published figure is a static image, from which events can be read to within about two days, so the timeline is no more precise than what is already public. | Supplemental Figure 1, by up to two days per event |
+| The demographics file was read from a location on the analyst's computer. | Privacy | Read from the project's restricted data folder. | None |
+| Candidates' last names stayed in the offer data after the link to study IDs. | Privacy | Dropped straight after the link. | None |
+
+### In code: the record correction
+
+On the left, the original as published in `original/` (the record identifier is removed there too). On the right, the rebuilt step, which takes the record and the new value from the restricted corrections file.
+
+```{r}
+#| echo: false
+#| eval: true
+source("_site_functions.R")
+
+side_by_side_diff(
+  old = r"---(
+  #Fix one offer that was accepted but not transplanted: the recipient became ineligible before transplant
+  # Removed for patient privacy: the record identifier of the corrected offer.
+  # mutate(Offer_Acceptance=ifelse(Match_ID==<removed for patient privacy>, "Provisional Acceptance", Offer_Acceptance))
+)---",
+  new = r"---(
+organ_offers_processed <- apply_record_corrections(
+  organ_offers_processed,
+  record_corrections,
+  source_name = "organ_offers",
+  id_column = "Match_ID"
+)
+)---",
+  old_title = "Original: the record named in the code",
+  new_title = "Rebuilt: the record read from the restricted file"
+)
+```
+
+## Checks added
+
+| Original code | Kind | Rebuilt code | Effect on published results |
+|---|---|---|---|
+| Columns were read by position, with no check that the files had the columns used later. | Check added | Each file's required columns, and that the date columns were read as dates, are checked when it is read. | None |
+| Follow-up was `End_Date - Date_of_consent`, whose units R chooses from the smallest difference in the column. With a candidate followed for less than a day, every candidate would have been expanded into seconds instead of days. | Check added | Stops unless follow-up is measured in days. | None; the published run had days |
+| The link from offers to study IDs joined on every column the two tables share. | Check added | Joins on the last name only, and stops if the offers already have a study ID column or if the join would duplicate offers (two candidates with one last name). | None |
+| The expansion into candidate-days was not checked. | Check added | Checks that the days add up to each candidate's follow-up and that no candidate has two transplant days. | None |
+| Base R compares a date-time with a date incorrectly. The original worked because `lubridate` was attached. | Check added | `lubridate` stays attached in [Setup](setup.qmd), and a test checks the comparison. | None |
+| `ggplotly()` fails with ggplot2 4.0 or later in plotly before 4.11.0. | Check added | Setup stops at the start with an installation hint. | None |
+
+## Removed
+
+| Original code | Kind | Rebuilt code | Effect on published results |
+|---|---|---|---|
+| The `foreign` and `ggtext` packages were attached but not used. | Removed | Not attached. | None |
+| The timeline was drawn twice, the second time without being saved. | Removed | Drawn once. | None |
+| Two tables were built only to be stacked, and marked "Don't use--columns stack in wrong order". | Removed | Not built. | None |
+
+## Tables and figures
+
+| Original code | Kind | Rebuilt code | Effect on published results |
+|---|---|---|---|
+| Tables showed variable names and FALSE/TRUE; the paper's tables were relabelled by hand. | Display only | The paper's row labels, column headers and category names, its column order, and a dagger on the refusal codes counted as potentially HIV-related, applied to copies of the data used only for display. | None |
+| The data spell two categories "Unkown" and "Greather than zero". | Display only | Shown as "Unknown" and "Greater than zero", as in the paper. | None |
+| The match date was summarized by the gtsummary default of its version. The paper's Table 2 shows the range; current gtsummary shows the median and interquartile range. | Display only | The range, as in the paper. | None |
+| A candidate followed only before, or only after, day 0 has no timeline segment on the other side. ggplot dropped it with a warning. | Display only | Dropped without a warning. | None |
+| One candidate has no end-of-follow-up marker on the timeline. | Kept as in the original | The same. | None |
+| A candidate consented exactly on day 0 would get no post-intervention segment on the timeline. | Kept as in the original | The same. | None |
+
+## The paper and the code
+
+| Paper | Kind | Original and rebuilt code | Effect on published results |
+|---|---|---|---|
+| The abstract gives 91% of declined offers as potentially HIV-related before the intervention; Results and Table 2 give 93% (25/27), with P = 0.004 in the text and 0.003 in Table 2. | Paper differs from code | 93% (25/27), P = 0.003. The abstract's figure appears to come from an earlier run of the code, before duplicate offers were removed. | The abstract's figure |
+| The refusal code "Donor quality". | Paper differs from code | The code as it appears in the data, "Donor age or quality"; shown as "Donor quality" in the tables. | None |
+| Supplemental Table 2 gives cold ischemia time in minutes. | Paper differs from code | Hours plus minutes divided by 60, so the values are in hours; the rebuilt table says hours. | Units label |
+| Supplemental Table 1's title describes recipients of transplants from donors with and without HIV. | Paper differs from code | All 23 consented candidates, in three groups including those not transplanted. | Title only |
+| "The proportion of organ declinations due to concern for donor quality was 75% (24/32)". | Paper differs from code | 32 is all pre-intervention offers; Table 2's percentages are of all offers. | Wording only |
+| 17 provisionally accepted offers "(13%)". | Paper differs from code | 17 of 122 is 13.9%. | Rounding |
+| Table 2's row "Organ was ultimately transplanted at another center". | Paper differs from code | Counts every offer whose donor's kidney was transplanted anywhere, including the offers transplanted at this center. | Row label |
+| Methods: means and proportions, with Wilcoxon, chi-squared and Fisher's exact tests. | Paper differs from code | Medians (interquartile range) and proportions, as the tables show, with gtsummary's default tests, including Kruskal-Wallis for three-group comparisons. | Methods wording |
+| The periods are described by month: March 2018 to November 2020, and December 2020 to April 2022. | Paper differs from code | Offers and candidate-days are assigned by comparison with the exact intervention date, so the boundary need not fall at the start of a month. | None on the published numbers, which come from the code |
+| R version 4.2.1. | Paper differs from code | The version of the original's final run was not recorded. | None |
+| Offers are linked to candidates (not described). | Kept as in the original | By candidate last name. An identifier would be better practice; the name is used only inside the join. | None |
+
+## Open decisions
+
+-   **Standard errors** ([#3](https://github.com/VagishHemmige/hope-act-education-intervention/issues/3)). The published Poisson models treat each candidate-day as independent; the original Stata version clustered by candidate.
+-   **The unpublished means tables** ([#4](https://github.com/VagishHemmige/hope-act-education-intervention/issues/4)). The original also built Supplemental Tables 1 and 2 with means, ANOVA and t-tests; they are kept, labelled as not in the paper, while the issue is open.
+-   **A small-cell rule** ([#5](https://github.com/VagishHemmige/hope-act-education-intervention/issues/5)) for any output not in the paper. Until it is set, nothing derived from the data is published except numbers that appear in the paper.
+
+## References
+
+::: {#refs}
+:::

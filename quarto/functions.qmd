@@ -1,0 +1,66 @@
+---
+title: "Functions"
+format: html
+---
+
+Reusable helpers. Each takes its inputs as arguments and reads no global objects, and each is tested on synthetic data with a known answer in [`tests/test-functions.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/tests/test-functions.R).
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/functions.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/functions.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/functions.R")
+```
+
+## Checks
+
+Small checks used by the other scripts: that files exist, that required columns or keys are present, and that a step did not change the number of rows. Each stops with a message naming what is missing, never a data value.
+
+```{r}
+#| label: check-functions
+#| eval: false
+```
+
+## Record corrections
+
+Applies the corrections listed for one data source: each names a record by its identifier and sets one field to a new value. A correction that matches no record, or more than one, stops the run, so a correction can never be applied silently to the wrong record or skipped. The messages name the source and field, not the identifier.
+
+```{r}
+#| label: apply-record-corrections
+#| eval: false
+```
+
+## Day jitter
+
+Moves each day offset by its own random whole number of days, from minus to plus the given maximum. A shift that would carry an event across day 0 is applied in the opposite direction instead, so every event stays in its own period, matching how periods are assigned (after day 0 is post-intervention). The seed is set only inside the function, so the shifts are the same on every run and nothing else in the session is affected.
+
+```{r}
+#| label: jitter-days
+#| eval: false
+```
+
+## Display labels
+
+Turns a column into a factor whose levels keep their default order, with some shown under new names. The tables use it to print categories as the paper does without changing the data.
+
+```{r}
+#| label: relabel-levels
+#| eval: false
+```
+
+## Saving tables
+
+Saves a table as HTML in the given folder.
+
+```{r}
+#| label: save-table
+#| eval: false
+```

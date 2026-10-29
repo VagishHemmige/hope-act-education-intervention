@@ -1,0 +1,62 @@
+---
+title: "1. Loading the data"
+format: html
+---
+
+Reads the three study files from `data-raw/`, exactly as the original code did; only their names and location changed. Each read checks the columns later steps use, so a changed file stops the run instead of being misread.
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/load_data.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/load_data.R)
+
+This R script file is itself reliant on the following files:
+
+-   [`R/setup.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/setup.R)
+-   [`R/functions.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/functions.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/load_data.R")
+```
+
+## Files present
+
+Stops, naming the missing file, if any of the three study files is not in `data-raw/`.
+
+```{r}
+#| label: check-data-files
+#| eval: false
+```
+
+## Organ offers
+
+One row per offer from a donor with HIV to one of the center's candidates, from the metrics the center submitted to UNOS, with the OPTN refusal code recorded for each declined offer.
+
+```{r}
+#| label: read-organ-offers
+#| eval: false
+```
+
+## Candidates
+
+One row per candidate who consented to the center's HOPE listing, with the dates of consent, end of follow-up and transplant, and whether the candidate was transplanted and whether from a donor with HIV. Column types are given by position, as in the original, so the step checks that the three date columns were read as dates.
+
+```{r}
+#| label: read-subjects
+#| eval: false
+```
+
+## Candidate, donor and transplant characteristics
+
+The characteristics in Supplemental Tables 1 and 2, processed on the [candidate characteristics page](process_demographics.qmd).
+
+```{r}
+#| label: read-demographics
+#| eval: false
+```

@@ -1,0 +1,106 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - index.qmd
+    - quarto/**
+
+author:
+  - name: Vagish Hemmige
+    affiliations:
+      - Montefiore Medical Center/Albert Einstein College of Medicine
+
+bibliography: references.bib
+
+website:
+  title: "HOPE Act educational intervention: the analysis code"
+  site-url: https://vagishhemmige.github.io/hope-act-education-intervention
+  repo-url: https://github.com/VagishHemmige/hope-act-education-intervention
+  repo-branch: master
+  repo-actions: [edit, issue]
+  page-navigation: true
+
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - href: index.qmd
+        text: Home
+
+      - section: Background
+        contents:
+          - href: quarto/background.qmd
+            text: Clinical background
+          - href: quarto/original.qmd
+            text: The original R Markdown file
+          - href: quarto/differences.qmd
+            text: Differences from the original code
+
+      - section: Setup and helper functions
+        contents:
+          - href: quarto/setup.qmd
+            text: Setup
+          - href: quarto/functions.qmd
+            text: Functions
+
+      - section: Data processing and analysis
+        contents:
+          - href: quarto/load_data.qmd
+            text: 1. Loading the data
+          - href: quarto/process_person_days.qmd
+            text: 2. Person-days
+          - href: quarto/process_offers.qmd
+            text: 3. Organ offers
+          - href: quarto/process_demographics.qmd
+            text: 4. Candidate characteristics
+          - href: quarto/models.qmd
+            text: 5. Models
+
+      - section: Tables and figures
+        contents:
+          - href: quarto/tables.qmd
+            text: Tables
+          - href: quarto/figures.qmd
+            text: Figures
+
+      - href: quarto/results.qmd
+        text: Published results
+
+      - section: Project documents
+        contents:
+          - href: quarto/analysis-plan.qmd
+            text: Analysis plan
+          - href: quarto/architecture.qmd
+            text: Architecture
+          - href: quarto/agents.qmd
+            text: AGENTS.md
+          - href: quarto/repository-blueprint.qmd
+            text: Repository blueprint
+
+      - href: quarto/about.qmd
+        text: About
+
+custom-callout:
+  Rcode:
+    icon: true
+    icon-symbol: "💻"
+    color: pink
+
+filters:
+  - custom-callout
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-fold: true
+    code-tools: true
+    page-layout: full
+    code-summary: "Click to show/hide R Code"
+
+# The site shows code; it never runs the analysis. Only the hidden
+# read_chunk() imports and calls to the site helpers in
+# quarto/_site_functions.R set eval: true.
+execute:
+  eval: false

@@ -1,0 +1,70 @@
+---
+title: "Setup"
+format: html
+---
+
+This script attaches every package the analysis uses, says where each file is, defines the constants a reader might want to check, and reads the values kept out of the code for patient privacy. Other scripts never call `library()` or hard-code a value.
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/setup.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/setup.R)
+
+This R script file is itself reliant on the following files:
+
+-   [`R/functions.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/functions.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/setup.R")
+```
+
+## Packages
+
+The tidyverse and `lubridate` handle the data and dates, `readxl` reads the spreadsheets, `gtsummary` and `gt` build the tables, `janitor` and `strex` tidy the demographics spreadsheet, `plotly` makes the interactive timeline, and `yaml` reads the restricted parameters. `lubridate` must stay attached: base R compares a date-time with a date incorrectly, and the period assignment relies on `lubridate` getting it right.
+
+```{r}
+#| label: load-packages
+#| eval: false
+```
+
+## Package versions
+
+`ggplotly()` in plotly versions before 4.11.0 fails with ggplot2 4.0 or later, with an error far from its cause. The run stops at the start instead, saying which version to install.
+
+```{r}
+#| label: check-package-versions
+#| eval: false
+```
+
+## File locations
+
+Every input is in the project's `data-raw/` folder, which Git ignores, and every output goes to `tables/` or `figures/`, which Git also ignores until the outputs are cleared. No path outside the project is used.
+
+```{r}
+#| label: define-paths
+#| eval: false
+```
+
+## Study constants
+
+The four OPTN refusal codes counted as a potentially HIV-related decline (analysis plan, section 7), written exactly as they appear in the data; the paper calls the first one "Donor quality". And the size of the random shift applied to each event in the patient timeline: up to two days, the precision of the published figure (analysis plan, section 10).
+
+```{r}
+#| label: define-study-constants
+#| eval: false
+```
+
+## Restricted values
+
+The intervention date and the timeline's random seed are read from `data-raw/restricted-parameters.yml`, and the record corrections from `data-raw/record-corrections.csv`. They are kept out of the code for patient privacy: with the exact intervention date, the day offsets in the analysis would give each patient's event dates, and with the seed, the timeline's shifts could be regenerated and removed. The step checks that each file has what the analysis needs and never prints the values.
+
+```{r}
+#| label: read-restricted-parameters
+#| eval: false
+```

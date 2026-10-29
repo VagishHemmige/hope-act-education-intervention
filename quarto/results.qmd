@@ -1,0 +1,13 @@
+---
+title: "Published results"
+format: html
+---
+
+The results are in the published article [@swaminathan2025hope], at [doi:10.1111/tid.70039](https://doi.org/10.1111/tid.70039). The article is © 2025 Wiley Periodicals LLC, so its tables and figures are not reproduced here.
+
+Run on the study data by the maintainer, the rebuilt code reproduces the numbers checked so far: the counts and shares of declined offers in Table 2 and the Results, the groups of candidates in Supplemental Tables 1 and 2, and both incidence rate ratios (all transplants, 3.11, 95% CI 1.08 to 9.44, P = 0.036; transplants from donors with HIV, 16.3, 2.90 to 305, P = 0.009). The tables the code builds are kept out of the repository until they have been checked and cleared for release. The [differences page](differences.qmd) lists every place where the paper's text and the code differ.
+
+## References
+
+::: {#refs}
+:::

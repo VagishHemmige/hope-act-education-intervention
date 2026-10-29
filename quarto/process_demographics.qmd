@@ -1,0 +1,62 @@
+---
+title: "4. Candidate characteristics"
+format: html
+---
+
+Derives the candidate, donor and transplant characteristics compared in Supplemental Tables 1 and 2, as in the original code.
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/process_demographics.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/process_demographics.R)
+
+This R script file is itself reliant on the following files:
+
+-   [`R/setup.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/setup.R)
+-   [`R/load_data.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/load_data.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/process_demographics.R")
+```
+
+## Column names
+
+Column names in snake case. The spreadsheet repeats the headings sex, race and ethnicity for recipient and donor, which become numbered names; they are renamed here.
+
+```{r}
+#| label: clean-demographic-names
+#| eval: false
+```
+
+## Recipient measures
+
+Panel reactive antibody classes I and II, and time on dialysis in years: years plus months divided by 12, with a missing month count taken as 0. `strex` takes the first and second numbers from text such as "5 years 4 months".
+
+```{r}
+#| label: derive-recipient-measures
+#| eval: false
+```
+
+## Donor and transplant measures
+
+Donor age in years, warm ischemia time in minutes, and cold ischemia time in hours (hours plus minutes divided by 60). The paper's Supplemental Table 2 labels cold ischemia time in minutes; the values are hours.
+
+```{r}
+#| label: derive-donor-measures
+#| eval: false
+```
+
+## End status
+
+Whether each candidate was transplanted, and from a donor with or without HIV; hepatitis C serology as negative or positive; and panel reactive antibody class II as zero or greater than zero.
+
+```{r}
+#| label: derive-end-status
+#| eval: false
+```
