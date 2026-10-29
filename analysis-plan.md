@@ -123,7 +123,7 @@ The data are covered by the IRB-approved study protocol. In addition, for patien
 
 ## 11. Limitations to address in reporting
 
-- A before-and-after design at one center cannot separate the intervention from secular trends, including national growth in D+ organ use and changes in OPTN allocation during the study period.
+- A before-and-after design at one center cannot separate the intervention from secular trends, including national growth in D+ organ use [@werbel2022national; @liang2024deceased] and changes in OPTN allocation during the study period.
 - Potentially HIV-related declines are inferred from OPTN refusal codes that were not designed to record HIV status; in particular the donor quality code is broad.
 - Small numbers: 23 candidates, 122 offers and 7 D+/R+ transplants, giving wide confidence intervals.
 - The Poisson models treat each candidate-day as independent ([#3](https://github.com/VagishHemmige/hope-act-education-intervention/issues/3)).

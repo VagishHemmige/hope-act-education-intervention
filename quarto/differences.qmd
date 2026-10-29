@@ -99,7 +99,7 @@ organ_offers_processed <- apply_record_corrections(
 | Table 2's row "Organ was ultimately transplanted at another center". | Paper differs from code | Counts every offer whose donor's kidney was transplanted anywhere, including the offers transplanted at this center. | Row label |
 | Methods: means and proportions, with Wilcoxon, chi-squared and Fisher's exact tests. | Paper differs from code | Medians (interquartile range) and proportions, as the tables show, with gtsummary's default tests, including Kruskal-Wallis for three-group comparisons. | Methods wording |
 | The periods are described by month: March 2018 to November 2020, and December 2020 to April 2022. | Paper differs from code | Offers and candidate-days are assigned by comparison with the exact intervention date, so the boundary need not fall at the start of a month. | None on the published numbers, which come from the code |
-| R version 4.2.1. | Paper differs from code | The version of the original's final run was not recorded. | None |
+| R version 4.2.1 [@rcoreteam2022r]. | Paper differs from code | The version of the original's final run was not recorded. | None |
 | Offers are linked to candidates (not described). | Kept as in the original | By candidate last name. An identifier would be better practice; the name is used only inside the join. | None |
 
 ## Open decisions
