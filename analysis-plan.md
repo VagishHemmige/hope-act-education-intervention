@@ -95,13 +95,13 @@ All analyses use R; the version used for each run is recorded with its outputs.
 
 **Transplant rates.** Poisson regression of the daily transplant indicator on period, one record per candidate-day, so that the rate is per candidate-day; the incidence rate ratio (post vs pre) with its 95% confidence interval and P value, as reported by `gtsummary::tbl_regression(exponentiate = TRUE)`. Two models: all transplants, and D+/R+ transplants.
 
-**Open:** standard errors that account for repeated days within a candidate (the original Stata code clustered by candidate; the published R models did not), as an addition to the published models (decision issue D2, to be opened).
+**Open:** standard errors that account for repeated days within a candidate (the original Stata code clustered by candidate; the published R models did not), as an addition to the published models ([#3](../../issues/3)).
 
 **Candidate characteristics (paper Supplemental Table 1).** Recipient age, sex, race, ethnicity, hepatitis C serology, time on dialysis (years plus months divided by 12), panel reactive antibody class I, and class II as zero or greater than zero, by end status, with an overall column: median (IQR) and n (%), with `gtsummary` default tests.
 
 **Donor and transplant characteristics (paper Supplemental Table 2).** Among transplanted candidates, by donor HIV status: warm ischemia time (minutes), cold ischemia time (hours plus minutes divided by 60), donor sex, race, ethnicity, hepatitis C serology and age, donation after brain or cardiac death, and terminal creatinine; median (IQR) and n (%), with `gtsummary` default tests.
 
-**Open:** whether the original code's alternative tables with means (SD), one-way ANOVA and t-tests, which were not published, are kept as unpublished extras or dropped (decision issue D3, to be opened).
+**Open:** whether the original code's alternative tables with means (SD), one-way ANOVA and t-tests, which were not published, are kept as unpublished extras or dropped ([#4](../../issues/4)).
 
 **Patient timeline (paper Supplemental Figure 1).** For each candidate, follow-up before and after day 0 as line segments, with offers (declined; accepted but not transplanted; accepted and transplanted) and end events (transplant from a D− donor, death, permanent delisting, end of study period) as points, on a time axis of days from day 0. Published only as set out in section 10.
 
@@ -109,7 +109,7 @@ All analyses use R; the version used for each run is recorded with its outputs.
 
 ## 9. Sensitivity analyses
 
-None were published. Any addition (for example D2) is decided in its issue and labelled as not in the paper.
+None were published. Any addition (for example [#3](../../issues/3)) is decided in its issue and labelled as not in the paper.
 
 ## 10. Disclosure control
 
@@ -119,14 +119,14 @@ The data are covered by the IRB-approved study protocol. In addition, for patien
 - **Patient timeline.** The published Supplemental Figure 1 is a static image, from which event times can be read to within about two days. Nothing published here is more precise than what is already public: the timeline may be shown interactively only with each event moved by its own random shift of up to ±2 days, from a seed kept with the restricted values, since a public seed would let the shifts be regenerated and removed.
 - **Small cells.** Until the decider sets a small-cell rule, nothing derived from the data is published except numbers that appear in the paper.
 
-**Open:** a small-cell rule for any output not in the paper (decision issue D4, to be opened).
+**Open:** a small-cell rule for any output not in the paper ([#5](../../issues/5)).
 
 ## 11. Limitations to address in reporting
 
 - A before-and-after design at one center cannot separate the intervention from secular trends, including national growth in D+ organ use and changes in OPTN allocation during the study period.
 - Potentially HIV-related declines are inferred from OPTN refusal codes that were not designed to record HIV status; in particular the donor quality code is broad.
 - Small numbers: 23 candidates, 122 offers and 7 D+/R+ transplants, giving wide confidence intervals.
-- The Poisson models treat each candidate-day as independent (D2).
+- The Poisson models treat each candidate-day as independent ([#3](../../issues/3)).
 - The post-intervention period overlaps the COVID-19 pandemic, which affected refusal reasons and candidate availability.
 
 ## References
