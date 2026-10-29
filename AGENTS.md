@@ -125,7 +125,7 @@ Check the items that apply before opening a pull request.
 
 Project-specific checks:
 
-- **Privacy sweep:** search every changed tracked file for dates, record identifiers, names and absolute paths. Only the paper's study-period months may appear.
+- **Privacy sweep:** search every changed tracked file for dates, record identifiers, names and absolute paths. Only the paper's study-period months may appear, and made-up values in synthetic test data, in files labelled as synthetic (decided 29 October 2026).
 - **Replication:** does every difference from the original code appear on the differences page, and is each one either reproducing the published code or linked to a decision issue?
 - **Periods:** is each offer and each person-day assigned to the pre- or post-intervention period by the plan's boundary rule, tested at the boundary?
 - **Person-time:** does the expansion into person-days give each candidate exactly the days from consent to end of follow-up, with each transplant counted once, on the right day?
