@@ -80,15 +80,18 @@ graphic_data_lines <- timeline_follow_up %>%
   mutate(Study_ID = as.factor(Study_ID))
 
 ## ---- timeline-plot
+# A candidate followed only before, or only after, day 0 has no segment on the
+# other side, so that segment is missing. na.rm = TRUE drops it quietly, as
+# ggplot would anyway, instead of printing a warning that counts them.
 plot1 <- ggplot() +
   geom_segment(data = graphic_data_lines,
                mapping = aes(x = endpoint2_left, xend = endpoint2_right,
                              y = Study_ID, yend = Study_ID),
-               color = "blue") +
+               color = "blue", na.rm = TRUE) +
   geom_segment(data = graphic_data_lines,
                mapping = aes(x = endpoint1_left, xend = endpoint1_right,
                              y = Study_ID, yend = Study_ID),
-               color = "red") +
+               color = "red", na.rm = TRUE) +
   geom_vline(xintercept = 0) +
   geom_point(data = graphic_data_points,
              mapping = aes(x = endpoint, y = Study_ID, color = Event, shape = Event),
