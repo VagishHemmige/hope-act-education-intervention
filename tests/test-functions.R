@@ -80,3 +80,14 @@ test_that("jitter_days never moves a value to the other side of day 0", {
   # Values near day 0 still move
   expect_true(any(shifted[kept & abs(x) <= 1] != x[kept & abs(x) <= 1]))
 })
+
+test_that("relabel_levels renames levels without changing their order or the values", {
+  x <- c("Donor age", "Donor age or quality", NA, "Not Reported", "Donor age or quality")
+  shown <- relabel_levels(x, c("Donor age or quality" = "Donor quality", "Absent" = "Ignored"))
+  expect_equal(levels(shown), c("Donor age", "Donor quality", "Not Reported"))
+  expect_equal(as.integer(shown), as.integer(factor(x)))
+  expect_true(is.na(shown[3]))
+  period <- relabel_levels(c(TRUE, FALSE, TRUE), c("FALSE" = "Pre", "TRUE" = "Post"))
+  expect_equal(as.character(period), c("Post", "Pre", "Post"))
+  expect_equal(levels(period), c("Pre", "Post"))
+})
