@@ -85,6 +85,19 @@ jitter_days <- function(x, max_days, seed) {
   shifted
 }
 
+## ---- relabel-levels
+# Turn a column into a factor whose levels keep the order they would have by
+# default (sorted), with some levels shown under new names. `labels` is a
+# named vector: names are the values as they appear in the data, values the
+# names to show. Values not in the data are ignored. Used only for display.
+relabel_levels <- function(x, labels = character()) {
+  values <- sort(unique(x))
+  shown <- as.character(values)
+  matched <- shown %in% names(labels)
+  shown[matched] <- labels[shown[matched]]
+  factor(x, levels = values, labels = shown)
+}
+
 ## ---- save-table
 # Save a gtsummary or gt table as HTML in the given folder.
 save_table <- function(table, name, dir) {
