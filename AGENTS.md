@@ -19,7 +19,7 @@ This repository releases the analysis code of a published single-center study of
 
 - **`analysis-plan.md` is the source of truth for design.** Code implements the plan; it does not redefine it. If code needs to depart from the plan, open a decision issue, or comment on the existing one, for the decider. Once the decider has settled it (in the issue, or relayed there in his exact words), the plan change and the code can go in the same pull request, which closes the issue.
 - **Decider.** Scientific decisions are made by Vagish Hemmige, in every area. Anyone may open or contribute to a decision issue; only the decider settles it (see "Working with agents").
-- **Replication rule.** The original code is evidence of what was done, not the specification. By default the rebuilt code reproduces the published numbers. When the original code disagrees with the paper or contains an error, do not silently copy it or silently fix it: the plan and the site's "Differences from the original code" page record every difference, and any change from what was published goes to a decision issue.
+- **Replication rule.** The original code is evidence of what was done, not the specification. By default the rebuilt code reproduces the published numbers. When the original code disagrees with the paper or contains an error, do not silently copy it or silently fix it: the site's "Differences from the original code" page records every difference, and any change from what was published goes to a decision issue.
 - **This is an analysis project, not an R package.** Do not add DESCRIPTION, NAMESPACE, roxygen, or pkgdown infrastructure, or apply CRAN conventions.
 - **Default branch:** `master`, protected. Changes reach it only through pull requests.
 
@@ -126,7 +126,7 @@ Check the items that apply before opening a pull request.
 Project-specific checks:
 
 - **Privacy sweep:** search every changed tracked file for dates, record identifiers, names and absolute paths. Only the paper's study-period months may appear.
-- **Replication:** does every difference from the original code appear in the plan and on the differences page, and is each one either reproducing the published code or linked to a decision issue?
+- **Replication:** does every difference from the original code appear on the differences page, and is each one either reproducing the published code or linked to a decision issue?
 - **Periods:** is each offer and each person-day assigned to the pre- or post-intervention period by the plan's boundary rule, tested at the boundary?
 - **Person-time:** does the expansion into person-days give each candidate exactly the days from consent to end of follow-up, with each transplant counted once, on the right day?
 - **Offers:** are duplicate offers of one donor to one candidate removed as the plan says, and are corrections applied only from the restricted list?
