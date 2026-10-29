@@ -1,0 +1,371 @@
+---
+title: "HOPE Act educational intervention: original analysis"
+author: "Vagish Hemmige"
+date: "2025-01-14"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Libraries
+
+```{r library}
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(gtsummary)
+library(foreign)
+library(janitor)
+library(strex)
+library(ggtext)
+library(plotly)
+
+```
+
+Set global values
+```{r}
+
+HIV_reason_list<-c("Donor age or quality", 
+                     "Donor medical history, specify", 
+                     "Donor social history", 
+                     "Positive infectious disease screening test: CMV, HBV, HCV, etc.")
+
+# Removed for patient privacy: the intervention date (day 0). With it, the
+# patient timeline's day offsets would give each patient's event dates.
+# InterventionDate<-mdy("<removed for patient privacy>")
+
+```
+
+
+Importing data
+```{r import_data}
+
+organ_offers_unprocessed <- read_excel("HIV positive organ offers (Hope Act) clean data.xls")
+
+transplant_data_unprocessed <- read_excel("Updated Hope-Act study Subjects 5-4-2022 Clean.xlsx", 
+                                          col_types = c("text", "text", "text", "text",
+                                                        "date", "date", "date", "numeric", 
+                                                        "numeric", "text", "text"))
+
+```
+
+Processing data
+
+```{r}
+
+
+transplant_data_processed<-transplant_data_unprocessed%>%
+  mutate(duration=as.numeric(End_Date-Date_of_consent))%>%
+  uncount(duration)%>%
+  group_by(Study_ID)%>%
+  mutate(start_date=days(row_number())+Date_of_consent-days(1), stop_date=days(row_number())+Date_of_consent)%>%
+  mutate(Post_Intervention=start_date>InterventionDate)%>%
+  mutate(Is_Transplant_date=(Date_of_TXP==stop_date))%>%
+  mutate(Is_Transplant_date=if_else(is.na(Is_Transplant_date), FALSE, Is_Transplant_date))%>%
+  mutate(Transplant_Outcome=ifelse(Is_Transplant_date, Transplanted, 0))%>%
+  mutate(HIV_Transplant_Outcome=ifelse(Is_Transplant_date, HIV_transplanted, 0))
+
+names_Study_ID_crosswalk<-transplant_data_unprocessed%>%
+  select(Study_ID, Candidate_Last_Name)
+
+organ_offers_processed<-organ_offers_unprocessed%>%
+  #Convert string to date format for Match_Date
+  mutate(Match_Date=mdy(Match_Date))%>%
+  #Remove duplicates
+  distinct(PX_ID, Donor_ID, .keep_all=TRUE)%>%
+  #Create variable that marks post-intervention period
+  mutate(Post_Intervention=Match_Date>InterventionDate)%>%
+  #Create variable that marks that organ was transplanted (regardless of where)
+  mutate(organ_was_transplanted=case_when(
+    Number_of_Kidneys_tranplanted_from_Donor>=1~TRUE,
+    Number_of_Kidneys_tranplanted_from_Donor==0~FALSE,
+    is.na(Number_of_Kidneys_tranplanted_from_Donor)~FALSE))%>%
+  #Create variable that marks whether organ was declined for donor concerns potentially related to HIV status:
+  mutate(Potential_HIV_Donor_decline=case_when(
+           (Offer_Acceptance=="No") & (Primary_Refusal_Reason %in% HIV_reason_list)~TRUE,
+           (Offer_Acceptance=="No") & !(Primary_Refusal_Reason %in% HIV_reason_list)~FALSE,
+           !(Offer_Acceptance=="No")~NA
+           ))%>%
+  #Sort by Donor ID
+  arrange(Donor_ID)%>%
+  #Add Study_ID to dataset
+  left_join(names_Study_ID_crosswalk)%>%
+  #Fix one offer that was accepted but not transplanted: the recipient became ineligible before transplant
+  # Removed for patient privacy: the record identifier of the corrected offer.
+  # mutate(Offer_Acceptance=ifelse(Match_ID==<removed for patient privacy>, "Provisional Acceptance", Offer_Acceptance))
+
+#Remove unneeded object
+rm(names_Study_ID_crosswalk)
+
+```
+
+Analyzing data from organ offers
+
+```{r}
+
+#How many distinct patients received organ offers?
+length(unique(organ_offers_processed$PX_ID))
+
+#How many distinct organ offers were received?
+length(unique(organ_offers_processed$Donor_ID))
+
+organ_offers_processed%>%
+  select(HIV_Pos_to_Pos, Match_Date, Offer_Acceptance, Primary_Refusal_Reason, Post_Intervention, 
+         organ_was_transplanted, Potential_HIV_Donor_decline)%>%
+  tbl_summary()%>%
+  as_gt()
+
+organ_offers_processed%>%
+  select(Match_Date, Offer_Acceptance, Primary_Refusal_Reason, Post_Intervention, 
+         organ_was_transplanted, Potential_HIV_Donor_decline)%>%
+  tbl_summary(by=Post_Intervention)%>%
+  add_p()%>%
+  modify_caption("**Pre and post-intervention data**")
+
+#We specifically look at offers which were declined:
+organ_offers_processed%>%
+  filter(Offer_Acceptance=="No")%>%
+  select(HIV_Pos_to_Pos, Match_Date, Offer_Acceptance, Primary_Refusal_Reason, Post_Intervention, 
+         organ_was_transplanted, Potential_HIV_Donor_decline)%>%
+  tbl_summary(by=Post_Intervention)%>%
+  add_p()%>%
+  modify_caption("**Pre and post-intervention data**")
+
+organ_offers_processed%>%
+    filter(Offer_Acceptance=="No")%>%
+  select(Post_Intervention, organ_was_transplanted, Potential_HIV_Donor_decline)%>%
+    tbl_strata(
+    strata = Post_Intervention,
+    .tbl_fun =
+      ~ .x %>%
+        tbl_summary(by = Potential_HIV_Donor_decline) %>%
+        add_n(),
+    .header = "**{strata}**, N = {n}"
+  )%>%
+  modify_caption("**Organ acceptance elsewhere in patients whose reason for decline was HIV-related, stratified by intervention period**")
+
+
+```
+
+```{r}
+
+#Poisson GLM, all transplants as outcome
+m1 <- glm(Transplant_Outcome ~Post_Intervention , family="poisson", data=transplant_data_processed)
+m1%>%tbl_regression(exponentiate=TRUE)
+
+#Poisson GLM, HIV D+ transplants as outcome
+m2 <- glm(HIV_Transplant_Outcome ~Post_Intervention , family="poisson", data=transplant_data_processed)
+m2%>%tbl_regression(exponentiate=TRUE)
+
+
+```
+
+Plot patient timeline
+```{r}
+#Create data sets needed for a patient timeline
+graphic_data_points_1<-organ_offers_processed%>%
+  mutate(Event=case_when(
+    Offer_Acceptance=="No"~"HIV offer declined",
+    Offer_Acceptance=="Provisional Acceptance"~"HIV offer accepted, but not transplanted",
+    Offer_Acceptance=="Yes"~"HIV offer accepted and transplanted"))%>%
+  rename(Event_Date=Match_Date)%>%
+  select(Study_ID, Event_Date, Event)
+  
+graphic_data_points_2<-transplant_data_unprocessed%>%
+  filter(HIV_transplanted==0)%>%
+  mutate(Event=case_when(
+    Transplanted==1 & HIV_transplanted==0~"Non-HIV offer accepted and transplanted",
+    str_detect(Listing_Status, "Deceased")~"Death",
+    str_detect(Listing_Status, "Withdrawn")~"Permanently delisted",
+    TRUE~"End of study period"))%>%
+    rename(Event_Date=End_Date)%>%
+    select(Study_ID, Event_Date, Event)
+
+graphic_data_points<-rbind(graphic_data_points_1, graphic_data_points_2)%>%
+  mutate(endpoint=as.numeric(as.Date(Event_Date)-as.Date(InterventionDate)))%>%
+  mutate(Study_ID=as.factor(Study_ID))%>%
+  select(-Event_Date)
+
+rm(graphic_data_points_1, graphic_data_points_2)
+
+
+graphic_data_lines<-transplant_data_unprocessed%>%
+  mutate(End_Date=as.Date(End_Date))%>%
+  mutate(Date_of_consent=as.Date(Date_of_consent))%>%
+  mutate(InterventionDate=as.Date(InterventionDate))%>%
+  mutate(endpoint_right=as.numeric(as.Date(End_Date)-as.Date(InterventionDate)))%>%
+  mutate(endpoint_left=as.numeric(as.Date(Date_of_consent)-as.Date(InterventionDate)))%>%
+  mutate(endpoint1_left=case_when(
+    endpoint_left<0~endpoint_left,
+    endpoint_left>=0~NA_real_))%>%
+  mutate(endpoint1_right=case_when(
+    endpoint_left<0 & endpoint_right>0~0,
+    endpoint_left<0 & endpoint_right<0~endpoint_right,
+    endpoint_left>=0~NA_real_))%>%
+  mutate(endpoint2_left=case_when(
+    endpoint_left<0 & endpoint_right>0~0,
+    endpoint_left>0 & endpoint_right>0~endpoint_left,
+    endpoint_right<=0~NA_real_))%>%
+  
+  mutate(endpoint2_right=case_when(
+    endpoint_right>0~endpoint_right,
+    endpoint_right<=0~NA_real_))%>%
+  
+  select(Study_ID, endpoint1_left, endpoint1_right, endpoint2_left, endpoint2_right)%>%
+  mutate(Study_ID=as.factor(Study_ID))
+
+
+  
+  #Plot patient timelines
+  
+  plot1<-ggplot()+
+  geom_segment(data=graphic_data_lines, mapping = aes(x=endpoint2_left, xend=endpoint2_right, 
+                                                      y=Study_ID, yend=Study_ID), 
+                                                      color="blue")+
+  geom_segment(data=graphic_data_lines, mapping = aes(x=endpoint1_left, xend=endpoint1_right, 
+                             y=Study_ID, yend=Study_ID), 
+                             color="red")+
+  geom_vline(xintercept = 0)+
+  geom_point(data=graphic_data_points, mapping=aes(x=endpoint, y=Study_ID, 
+                                                   color=Event, shape=Event), 
+             alpha=0.7)+
+  labs(y= "Study ID", x = "Days before or after study intervention (Date of Intervention=0)")+
+  scale_x_continuous(breaks=seq(-1095,720,365))+
+  scale_shape_manual(values=c(0,1,2,3,4,5,6))+
+  theme_classic()+
+  theme(legend.position="bottom")
+  
+    #Plot patient timelines
+  
+  ggplot()+
+  geom_segment(data=graphic_data_lines, mapping = aes(x=endpoint2_left, xend=endpoint2_right, 
+                                                      y=Study_ID, yend=Study_ID), 
+                                                      color="blue")+
+  geom_segment(data=graphic_data_lines, mapping = aes(x=endpoint1_left, xend=endpoint1_right, 
+                             y=Study_ID, yend=Study_ID), 
+                             color="red")+
+  geom_vline(xintercept = 0)+
+  geom_point(data=graphic_data_points, mapping=aes(x=endpoint, y=Study_ID, 
+                                                   color=Event, shape=Event), 
+             alpha=0.7)+
+  labs(y= "Study ID", x = "Days before or after study intervention (Date of Intervention=0)")+
+  scale_x_continuous(breaks=seq(-1095,720,365))+
+  scale_shape_manual(values=c(0,1,2,3,4,5,6))+
+  theme_classic()+
+  theme(legend.position="bottom")
+    
+  ggplotly(plot1, tooltip = c("y","color"))%>% 
+    layout(legend = list(orientation = "h", x = 0, y = -0.2))
+    
+    
+
+```
+
+
+Demographics
+```{r}
+
+Demographics <- read_excel("<data folder>/Hope_Act_Excelsheet_9-18-2023.xlsx")%>%
+  clean_names()%>%
+  rename(recipient_age_yrs=age_yrs)%>%
+  rename(recipient_sex=sex_10)%>%
+  rename(recipient_race=race_11)%>%
+  rename(recipient_ethnicity=ethnicity_12)%>%
+  rename(donor_sex=sex_26)%>%
+  rename(donor_race=race_27)%>%
+  rename(donor_ethnicity=ethnicity_28)%>%
+  mutate(PRA_1=str_first_number(class_i_pra_percent))%>%
+  mutate(PRA_2=str_first_number(class_ii_pra_percent))%>%
+  mutate(years_on_dialysis=str_first_number(time_on_dialysis))%>%
+  mutate(months_on_dialysis=str_nth_number(time_on_dialysis, n = 2))%>%
+  mutate(months_on_dialysis=ifelse(is.na(months_on_dialysis), 0, months_on_dialysis))%>%
+  mutate(time_on_hd_years=years_on_dialysis+(1/12)*(months_on_dialysis))%>%
+  mutate(donor_age_years=str_first_number(donor_age))%>%
+  mutate(warm_ischemia_min=str_first_number(warm_ischemia_time))%>%
+  mutate(cold_ischemia_hours=str_first_number(cold_ischemia_time))%>%
+  mutate(cold_ischemia_min=str_nth_number(cold_ischemia_time, n = 2))%>%
+  mutate(cold_ischemia_total=cold_ischemia_hours+(1/60)*cold_ischemia_min)%>%
+  mutate(EndStatus=case_when(
+    hiv_transplanted==1~"Transplanted from HIV D+ donor",
+    hiv_transplanted==0 & transplanted==1~"Transplanted from HIV D- donor",
+    TRUE~"Not transplanted"))%>%
+  mutate(recipient_hcv_binary=ifelse(str_detect(recipient_hcv, "Negative"), "Negative", "Positive"))%>%
+  mutate(PRA_2_binary=ifelse(PRA_2==0, "Zero", "Greather than zero"))
+
+
+#Medians
+Demographics%>%
+  select(starts_with("recipient"), time_on_hd_years,PRA_1, PRA_2_binary, EndStatus)%>%
+  select(-recipient_hcv)%>%
+  tbl_summary(by=EndStatus)%>%
+  add_p()%>%
+  bold_labels()%>%
+  add_overall()%>%
+  as_gt()
+
+Demographics%>%
+  filter(!EndStatus=="Not transplanted")%>%
+  select(warm_ischemia_min, cold_ischemia_total,starts_with("donor"), dcd_or_dbd, terminal_creatinine, EndStatus)%>%
+  select(-donor_age)%>%
+  tbl_summary(by=EndStatus)%>%
+  add_p()%>%
+  bold_labels()%>%
+  add_overall()%>%
+  as_gt()
+
+#Means
+Demographics%>%
+  select(starts_with("recipient"), time_on_hd_years,PRA_1, PRA_2_binary, EndStatus)%>%
+  select(-recipient_hcv)%>%
+  tbl_summary(by=EndStatus,
+              statistic = list(all_continuous() ~ "{mean} ({sd})"),
+    digits = all_continuous() ~ 1)%>%
+  add_p(test=all_continuous()~"aov")%>%
+  bold_labels()%>%
+  add_overall()%>%
+  as_gt()
+
+Demographics%>%
+  filter(!EndStatus=="Not transplanted")%>%
+  select(warm_ischemia_min, cold_ischemia_total,starts_with("donor"), dcd_or_dbd, terminal_creatinine, EndStatus)%>%
+  select(-donor_age)%>%
+  tbl_summary(by=EndStatus,
+              statistic = list(all_continuous() ~ "{mean} ({sd})"),
+    digits = all_continuous() ~ 1)%>%
+  add_p(test=all_continuous()~"t.test")%>%
+  bold_labels()%>%
+  add_overall()%>%
+  as_gt()
+
+
+
+
+
+Table1A<-Demographics%>%
+  select(starts_with("recipient"), time_on_hd_years,PRA_1, PRA_2, EndStatus)%>%
+  select(-recipient_hcv)%>%
+  tbl_summary(by=EndStatus)%>%
+  add_p()%>%
+  bold_labels()%>%
+  add_overall()
+
+Table1B<-Demographics%>%
+  filter(!EndStatus=="Not transplanted")%>%
+  select(warm_ischemia_min, cold_ischemia_total,starts_with("donor"), dcd_or_dbd, terminal_creatinine, EndStatus)%>%
+  select(-donor_age)%>%
+  tbl_summary(by=EndStatus)%>%
+  add_p()%>%
+  bold_labels()%>%
+  add_overall()
+
+#Don't use--columns stack in wrong order
+tbl_stack(list(Table1A, Table1B))
+
+
+```
+

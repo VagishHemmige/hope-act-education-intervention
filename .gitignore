@@ -1,0 +1,83 @@
+# R, RStudio and Positron
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.httr-oauth
+.DS_Store
+
+# Quarto (docs/ is NOT ignored: it is the published site)
+/.quarto/
+**/*.quarto_ipynb
+/_freeze/
+
+# Credentials
+.Renviron
+.env
+*.pem
+*.key
+
+# Restricted data. The three study spreadsheets, any Stata exports, and the
+# restricted values removed from the code for patient privacy (the intervention
+# date in restricted-parameters.yml and record corrections in
+# record-corrections.csv) all live in data-raw/. Ignoring a folder does not stop
+# anyone, or any AI tool connected to the project, from reading it; this is a
+# safety net against committing it, not access control.
+/data-raw/
+
+# Local archive: earlier versions of the code (which still contain the
+# restricted values), knitted outputs from real data, manuscript drafts with
+# contact details and reviewer correspondence, and the rename log. Never
+# committed; the public copy of the latest original code is in original/.
+/Archive/
+# Any copy of the original code that still has the restricted values
+/analysis-*.Rmd
+
+# EndNote library and its attachments; the citations are exported to references.bib
+/references/endnote/
+
+# Data files, anywhere: a safety net in case one is saved outside data-raw/
+*.csv
+*.xlsx
+*.xls
+*.rds
+*.rda
+*.sas7bdat
+*.sas7bcat
+*.xpt
+*.dta
+*.sav
+*.parquet
+*.feather
+*.arrow
+*.fst
+
+# Stata logs, which can print data values
+*.log
+*.smcl
+
+# Knitted or saved outputs outside the site. Rendered Word, PDF and HTML files
+# can hold results from real data, and saved htmlwidgets (such as the plotly
+# patient timeline) embed every data point. docs/ is the only place HTML is
+# tracked.
+*.docx
+*.doc
+*.pdf
+*.html
+!/docs/**/*.html
+*_files/
+~$*
+
+# Outputs, ignored until cleared for public release. Remove these two lines only
+# after the decider has checked the outputs against the published paper and
+# cleared them for release; then inspect the contents before staging.
+# Removing them does not track tables saved as .csv or .rds: the data-format
+# patterns above still hide those, so cleared tables need their own exceptions.
+/figures/
+/tables/
+
+# Approved public files: add narrow exceptions here, never a whole format.
+# !tests/fixtures/synthetic.csv
+.Rproj.user
+.Rdata
+.quarto
