@@ -1,0 +1,63 @@
+---
+title: "2. Person-days"
+format: html
+---
+
+Expands each candidate's follow-up into one row per day, assigns each day to the pre- or post-intervention period, and marks the day of transplant, as in the original code. The [models](models.qmd) use these rows to compare transplant rates.
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/process_person_days.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/process_person_days.R)
+
+This R script file is itself reliant on the following files:
+
+-   [`R/setup.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/setup.R)
+-   [`R/functions.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/functions.R)
+-   [`R/load_data.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/load_data.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/process_person_days.R")
+```
+
+## One row per day
+
+Each candidate contributes one row per day from consent to the end of follow-up; day *k* starts *k* − 1 days after consent and ends *k* days after. Follow-up must be measured in days: R chooses the units of a difference between date-times from the smallest one in the column, so a candidate with less than a day of follow-up would make every candidate expand into seconds. The step stops in that case.
+
+```{r}
+#| label: expand-person-days
+#| eval: false
+```
+
+## Period
+
+A day is post-intervention when it starts after day 0, the intervention date read in [Setup](setup.qmd#restricted-values) (analysis plan, section 5).
+
+```{r}
+#| label: assign-period-to-days
+#| eval: false
+```
+
+## Transplant day
+
+A transplant counts on the day that ends on the transplant date; every other day counts 0. A second outcome counts only transplants from donors with HIV.
+
+```{r}
+#| label: mark-transplant-day
+#| eval: false
+```
+
+## Checks
+
+The days must add up to each candidate's follow-up, and no candidate may have two transplant days.
+
+```{r}
+#| label: check-person-days
+#| eval: false
+```

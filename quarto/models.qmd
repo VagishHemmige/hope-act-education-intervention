@@ -1,0 +1,34 @@
+---
+title: "5. Models"
+format: html
+---
+
+Fits the Poisson models of transplant rate after versus before the intervention, as published (analysis plan, section 8).
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/models.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/models.R)
+
+This R script file is itself reliant on the following files:
+
+-   [`R/process_person_days.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/process_person_days.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/models.R")
+```
+
+## Poisson models
+
+One row per candidate-day, so the rate is per candidate-day and the exponentiated coefficient is the incidence rate ratio, post- versus pre-intervention. One model counts all transplants and the other only transplants from donors with HIV. As published, the models do not account for repeated days within a candidate; standard errors that do are an open decision ([#3](https://github.com/VagishHemmige/hope-act-education-intervention/issues/3)).
+
+```{r}
+#| label: fit-poisson-models
+#| eval: false
+```

@@ -1,0 +1,54 @@
+---
+title: "3. Organ offers"
+format: html
+---
+
+Prepares the offer-level data, in the original code's order: dates, duplicate removal, period, the derived offer measures, the link to study IDs, and the listed correction (analysis plan, sections 4, 5 and 7).
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/process_offers.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/process_offers.R)
+
+This R script file is itself reliant on the following files:
+
+-   [`R/setup.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/setup.R)
+-   [`R/functions.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/functions.R)
+-   [`R/load_data.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/load_data.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/process_offers.R")
+```
+
+## Dates, duplicates, period and offer measures
+
+Match dates are read as dates, and repeated offers of the same donor to the same candidate are reduced to one. An offer is post-intervention when it was made after day 0. Two measures are derived: whether at least one kidney from the offer's donor was transplanted at any center, with a missing count taken as not transplanted; and, for declined offers only, whether the refusal code is one of the four counted as potentially HIV-related.
+
+```{r}
+#| label: prepare-offers
+#| eval: false
+```
+
+## Link to study IDs
+
+Offers are linked to candidates' study IDs by last name, as in the original code. An identifier would be better practice; the name is used only inside this step and dropped straight after. The original join used every column the two tables share, which is only the last name when the offers have no study ID column, so the step checks that, and stops if the join would duplicate offers.
+
+```{r}
+#| label: link-offers-to-study-ids
+#| eval: false
+```
+
+## Correction
+
+One accepted offer is recoded as a provisional acceptance, because the recipient became ineligible before transplant. For patient privacy, the record and the new value are read from the restricted corrections file, not written here.
+
+```{r}
+#| label: apply-offer-corrections
+#| eval: false
+```

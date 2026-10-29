@@ -37,3 +37,7 @@ Object names follow the original R Markdown file (`original/original-analysis-20
 ## Tests
 
 `tests/` holds tests on synthetic data, built by hand in `tests/helper-synthetic.R` and never derived from real records. Run them with `testthat::test_dir("tests")`. They cover the helper functions, the person-day expansion and period boundary, the offer processing, link and correction, and the timeline's shifts. The table scripts and the demographics processing are not yet tested.
+
+## Website
+
+`_quarto.yml` and `index.qmd` at the root and the pages in `quarto/` render to `docs/`, which GitHub Pages serves. Each script page imports its script's labelled sections with `knitr::read_chunk()` and never runs them. The only other code a page runs is in `quarto/_site_functions.R`: `rmd_as_markdown()` shows the original R Markdown file with its chunks folded, and `side_by_side_diff()` shows original and rebuilt code side by side; both read only the code or text given to them, and are tested in `tests/test-site-functions.R`. The project-document pages include the root `.md` files, which stay the single source.

@@ -1,0 +1,73 @@
+---
+title: "Figures"
+format: html
+---
+
+Draws the patient timeline, the paper's Supplemental Figure 1, as a static image and as an interactive page, both saved to the gitignored `figures/` folder.
+
+::: {.Rcode title="Source code"}
+The full R script is available at:
+
+-   [`R/figures.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/figures.R)
+
+This R script file is itself reliant on the following files:
+
+-   [`R/setup.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/setup.R)
+-   [`R/functions.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/functions.R)
+-   [`R/load_data.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/load_data.R)
+-   [`R/process_offers.R`](https://github.com/VagishHemmige/hope-act-education-intervention/blob/master/R/process_offers.R)
+
+The code sections below are imported directly from that script when this page is rendered.
+:::
+
+```{r}
+#| include: false
+#| eval: true
+#| cache: false
+knitr::read_chunk("../R/figures.R")
+```
+
+## Follow-up
+
+Days from day 0 to each candidate's consent and end of follow-up. Each is moved by its own random shift of up to two days, never across day 0, so the figure is no more precise than the published static one; the interactive page embeds every plotted value, which is why the shift comes before plotting. The end of follow-up is one event, so its shifted day is used for both the end of the line and the end marker.
+
+```{r}
+#| label: timeline-follow-up
+#| eval: false
+```
+
+## Events
+
+Offers, as declined, accepted but not transplanted, or accepted and transplanted, each at its own shifted day; and how follow-up ended for candidates not transplanted from a donor with HIV.
+
+```{r}
+#| label: timeline-events
+#| eval: false
+```
+
+## Lines
+
+Each candidate's follow-up as up to two segments split at day 0: red before the intervention and blue after, as in the original code.
+
+```{r}
+#| label: timeline-lines
+#| eval: false
+```
+
+## Plot
+
+The original figure's layers and styling. A candidate followed only before, or only after, day 0 has no segment on the other side; it is dropped without a warning.
+
+```{r}
+#| label: timeline-plot
+#| eval: false
+```
+
+## Export
+
+A PNG image and a self-contained interactive page in `figures/`, which stays out of Git until the figure is cleared.
+
+```{r}
+#| label: save-timeline
+#| eval: false
+```
