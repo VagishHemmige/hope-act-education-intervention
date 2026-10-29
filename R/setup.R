@@ -15,8 +15,17 @@ library(gtsummary)
 library(gt)
 library(janitor)
 library(strex)
-library(plotly)
+library(plotly)      # 4.11.0 or later is needed with ggplot2 4.0 or later
 library(yaml)
+
+## ---- check-package-versions
+# ggplotly() in plotly before 4.11.0 fails with ggplot2 4.0 or later
+# ("unused argument" in train()).
+if (packageVersion("ggplot2") >= "4.0.0" && packageVersion("plotly") < "4.11.0") {
+  stop("With ggplot2 ", packageVersion("ggplot2"), ", plotly 4.11.0 or later is needed ",
+       "(installed: ", packageVersion("plotly"), "). Run install.packages(\"plotly\").",
+       call. = FALSE)
+}
 
 ## ---- define-paths
 data_dir <- "data-raw"
