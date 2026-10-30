@@ -70,17 +70,19 @@ apply_record_corrections <- function(data, corrections, source_name, id_column) 
 # -max_days to max_days, all equally likely. A shift never moves a value to
 # the other side of day 0 (decided 29 October 2026): values at or before day 0
 # stay at or before it, and values after it stay after it, matching how the
-# periods are assigned (post-intervention means after day 0). A shift that
-# would cross is applied in the opposite direction instead. Missing values
-# stay missing. The seed is set only inside this function, so the shifts are
-# the same on every run and nothing else in the session is affected.
+# periods are assigned (post-intervention means after day 0). A value before
+# day 0 is also never moved onto day 0 itself, where the timeline draws no
+# line. A shift that would cross, or land a value from before day 0 on day 0,
+# is applied in the opposite direction instead. Missing values stay missing.
+# The seed is set only inside this function, so the shifts are the same on
+# every run and nothing else in the session is affected.
 jitter_days <- function(x, max_days, seed) {
   shifts <- withr::with_seed(
     seed,
     sample(seq(-max_days, max_days), length(x), replace = TRUE)
   )
   shifted <- x + shifts
-  crossed <- !is.na(x) & ((x <= 0) != (shifted <= 0))
+  crossed <- !is.na(x) & (((x <= 0) != (shifted <= 0)) | (x < 0 & shifted == 0))
   shifted[crossed] <- x[crossed] - shifts[crossed]
   shifted
 }
