@@ -40,7 +40,7 @@ Applies the corrections listed for one data source: each names a record by its i
 
 ## Day jitter
 
-Moves each day offset by its own random whole number of days, from minus to plus the given maximum. A shift that would carry an event across day 0 is applied in the opposite direction instead, so every event stays in its own period, matching how periods are assigned (after day 0 is post-intervention). The seed is set only inside the function, so the shifts are the same on every run and nothing else in the session is affected.
+Moves each day offset by its own random whole number of days, from minus to plus the given maximum. A shift that would carry an event across day 0 is applied in the opposite direction instead, so every event stays in its own period, matching how periods are assigned (after day 0 is post-intervention). The same happens to a shift that would move an event from before day 0 onto day 0 itself, where the timeline draws no line. The seed is set only inside the function, so the shifts are the same on every run and nothing else in the session is affected.
 
 ```{r}
 #| label: jitter-days

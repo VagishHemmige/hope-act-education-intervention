@@ -1,7 +1,7 @@
 # Tests of R/figures.R on synthetic data: the timeline is drawn from shifted
 # days only, and every shift is within the limit.
 
-timeline <- function() {
+timeline <- function(subjects = synthetic_subjects) {
   offers_env <- run_script("process_offers.R",
                            organ_offers_unprocessed = synthetic_offers,
                            transplant_data_unprocessed = synthetic_subjects,
@@ -10,7 +10,7 @@ timeline <- function() {
                            record_corrections = synthetic_corrections)
   suppressPackageStartupMessages({library(ggplot2); library(plotly)})
   run_script("figures.R",
-             transplant_data_unprocessed = synthetic_subjects,
+             transplant_data_unprocessed = subjects,
              organ_offers_processed = offers_env$organ_offers_processed,
              InterventionDate = synthetic_day_0,
              timeline_jitter_days = 2,
@@ -46,6 +46,25 @@ test_that("the end-of-follow-up point and the end of the line share one shift", 
   line_end <- coalesce(lines$endpoint2_right, lines$endpoint1_right)
   matched <- inner_join(ends, tibble(Study_ID = lines$Study_ID, line_end), by = "Study_ID")
   expect_equal(matched$endpoint, matched$line_end)
+})
+
+test_that("every candidate keeps a line when consent or end is just before day 0", {
+  # SYNTHETIC: 40 extra candidates, none transplanted. Half consent one or two
+  # days before day 0; half end follow-up one or two days before it.
+  near_day_0 <- tibble(
+    Study_ID            = sprintf("N%02d", 1:40),
+    Candidate_Last_Name = sprintf("Near%02d", 1:40),
+    Date_of_consent     = utc(as.character(synthetic_day_0 - c(rep(1:2, 10), rep(30, 20)))),
+    End_Date            = utc(as.character(synthetic_day_0 + c(rep(10, 20), -rep(1:2, 10)))),
+    Date_of_TXP         = utc(NA),
+    Transplanted        = 0,
+    HIV_transplanted    = 0,
+    Listing_Status      = "Deceased"
+  )
+  lines <- timeline(subjects = bind_rows(synthetic_subjects, near_day_0))$graphic_data_lines
+  has_segment <- (!is.na(lines$endpoint1_left) & !is.na(lines$endpoint1_right)) |
+    (!is.na(lines$endpoint2_left) & !is.na(lines$endpoint2_right))
+  expect_true(all(has_segment))
 })
 
 test_that("the timeline is saved as an image and an interactive page", {

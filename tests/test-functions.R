@@ -81,6 +81,17 @@ test_that("jitter_days never moves a value to the other side of day 0", {
   expect_true(any(shifted[kept & abs(x) <= 1] != x[kept & abs(x) <= 1]))
 })
 
+test_that("jitter_days never moves a value from before day 0 onto day 0", {
+  x <- rep(c(-2, -1, 0, NA), times = 500)
+  shifted <- jitter_days(x, 2, seed = 7)
+  before <- !is.na(x) & x < 0
+  expect_true(all(shifted[before] < 0))
+  expect_true(all(abs(shifted[before] - x[before]) <= 2))
+  # Values exactly on day 0 still stay at or before it, as before.
+  on_day_0 <- !is.na(x) & x == 0
+  expect_true(all(shifted[on_day_0] <= 0))
+})
+
 test_that("relabel_levels renames levels without changing their order or the values", {
   x <- c("Donor age", "Donor age or quality", NA, "Not Reported", "Donor age or quality")
   shown <- relabel_levels(x, c("Donor age or quality" = "Donor quality", "Absent" = "Ignored"))
