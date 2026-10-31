@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-243619feadb355500505c6593e83032b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -487,7 +487,7 @@ edit that file, not this page. Its first heading is the page title.
 </section>
 <section id="website" class="level2">
 <h2 class="anchored" data-anchor-id="website">Website</h2>
-<p><code>_quarto.yml</code> and <code>index.qmd</code> at the root and the pages in <code>quarto/</code> render to <code>docs/</code>, which GitHub Pages serves. Each script page imports its script’s labelled sections with <code>knitr::read_chunk()</code> and never runs them. The only other code a page runs is in <code>quarto/_site_functions.R</code>: <code>rmd_as_markdown()</code> shows the original R Markdown file with its chunks folded, and <code>side_by_side_diff()</code> shows original and rebuilt code side by side; both read only the code or text given to them, and are tested in <code>tests/test-site-functions.R</code>. The project-document pages include the root <code>.md</code> files, which stay the single source.</p>
+<p><code>_quarto.yml</code> and <code>index.qmd</code> at the root and the pages in <code>quarto/</code> render to <code>docs/</code>, which is not committed: <code>.github/workflows/publish.yml</code> renders the site on every pull request as a check and, on each push to <code>master</code>, renders it and publishes it to the <code>gh-pages</code> branch, which GitHub Pages serves. Each script page imports its script’s labelled sections with <code>knitr::read_chunk()</code> and never runs them. The only other code a page runs is in <code>quarto/_site_functions.R</code>: <code>rmd_as_markdown()</code> shows the original R Markdown file with its chunks folded, and <code>side_by_side_diff()</code> shows original and rebuilt code side by side; both read only the code or text given to them, and are tested in <code>tests/test-site-functions.R</code>. The project-document pages include the root <code>.md</code> files, which stay the single source.</p>
 
 
 <!-- -->

@@ -102,7 +102,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-243619feadb355500505c6593e83032b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -459,7 +459,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <tr class="odd">
 <td>The patient timeline was saved as an interactive page that embeds every event at its exact day.</td>
 <td>Privacy</td>
-<td>Each event is moved by its own random shift of up to two days, never across day 0, from a seed kept with the restricted values. The published figure is a static image, from which events can be read to within about two days, so the timeline is no more precise than what is already public.</td>
+<td>Each event is moved by its own random shift of up to two days, never across day 0 and never from before day 0 onto it, from a seed kept with the restricted values. The published figure is a static image, from which events can be read to within about two days, so the timeline is no more precise than what is already public.</td>
 <td>Supplemental Figure 1, by up to two days per event</td>
 </tr>
 <tr class="even">
@@ -672,9 +672,9 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <td>None</td>
 </tr>
 <tr class="even">
-<td>A candidate consented exactly on day 0 would get no post-intervention segment on the timeline.</td>
+<td>A candidate consented exactly on day 0 would get no line on the timeline: the segment code handles days before and after day 0, not day 0 itself.</td>
 <td>Kept as in the original</td>
-<td>The same.</td>
+<td>The same. The random shift never moves a day onto day 0 from before it, so the shift cannot create this case.</td>
 <td>None</td>
 </tr>
 </tbody>
@@ -1281,7 +1281,7 @@ Swaminathan, Neeraja, Yoram A. Puius, Jonathan Czeresnia, et al. 2025. <span>“
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|</span></span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The intervention date, day 0 for both periods, was written in the code. With the exact date, the day offsets in the analysis and the timeline would give each patient's event dates. <span class="pp">|</span> Privacy <span class="pp">|</span> Read from a restricted file kept with the data (see <span class="co">[</span><span class="ot">Setup</span><span class="co">](setup.qmd#restricted-values)</span>). <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> One accepted offer was recoded as a provisional acceptance, by its record identifier written in the code, because the recipient became ineligible before transplant. <span class="pp">|</span> Privacy <span class="pp">|</span> The correction is listed in a restricted file and applied by <span class="in">`apply_record_corrections()`</span>, which stops if it matches no record or more than one. <span class="pp">|</span> None <span class="pp">|</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The patient timeline was saved as an interactive page that embeds every event at its exact day. <span class="pp">|</span> Privacy <span class="pp">|</span> Each event is moved by its own random shift of up to two days, never across day 0, from a seed kept with the restricted values. The published figure is a static image, from which events can be read to within about two days, so the timeline is no more precise than what is already public. <span class="pp">|</span> Supplemental Figure 1, by up to two days per event <span class="pp">|</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The patient timeline was saved as an interactive page that embeds every event at its exact day. <span class="pp">|</span> Privacy <span class="pp">|</span> Each event is moved by its own random shift of up to two days, never across day 0 and never from before day 0 onto it, from a seed kept with the restricted values. The published figure is a static image, from which events can be read to within about two days, so the timeline is no more precise than what is already public. <span class="pp">|</span> Supplemental Figure 1, by up to two days per event <span class="pp">|</span></span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The demographics file was read from a location on the analyst's computer. <span class="pp">|</span> Privacy <span class="pp">|</span> Read from the project's restricted data folder. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Candidates' last names stayed in the offer data after the link to study IDs. <span class="pp">|</span> Privacy <span class="pp">|</span> Dropped straight after the link. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
@@ -1341,7 +1341,7 @@ Swaminathan, Neeraja, Yoram A. Puius, Jonathan Czeresnia, et al. 2025. <span>“
 <span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The match date was summarized by the gtsummary default of its version. The paper's Table 2 shows the range; current gtsummary shows the median and interquartile range. <span class="pp">|</span> Display only <span class="pp">|</span> The range, as in the paper. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> A candidate followed only before, or only after, day 0 has no timeline segment on the other side. ggplot dropped it with a warning. <span class="pp">|</span> Display only <span class="pp">|</span> Dropped without a warning. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> One candidate has no end-of-follow-up marker on the timeline. <span class="pp">|</span> Kept as in the original <span class="pp">|</span> The same. <span class="pp">|</span> None <span class="pp">|</span></span>
-<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> A candidate consented exactly on day 0 would get no post-intervention segment on the timeline. <span class="pp">|</span> Kept as in the original <span class="pp">|</span> The same. <span class="pp">|</span> None <span class="pp">|</span></span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> A candidate consented exactly on day 0 would get no line on the timeline: the segment code handles days before and after day 0, not day 0 itself. <span class="pp">|</span> Kept as in the original <span class="pp">|</span> The same. The random shift never moves a day onto day 0 from before it, so the shift cannot create this case. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="fu">## The paper and the code</span></span>
 <span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>

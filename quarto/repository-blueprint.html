@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-243619feadb355500505c6593e83032b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -409,7 +409,7 @@ edit that file, not this page. Its first heading is the page title.
 ├── references/              # Supporting literature and evidence
 ├── quarto/                  # Explanatory Quarto pages
 ├── _extensions/             # Quarto extensions, when used
-├── docs/                    # Rendered website, served by GitHub Pages
+├── docs/                    # Local render of the website (ignored; published to gh-pages)
 ├── _quarto.yml              # Quarto configuration
 ├── index.qmd                # Website entry point
 ├── README.Rmd               # Source for README.md
@@ -443,7 +443,7 @@ edit that file, not this page. Its first heading is the page title.
 <h2 class="anchored" data-anchor-id="outputs-and-version-control">Outputs and version control</h2>
 <ul>
 <li>Outputs from the restricted data stay local and out of Git until the decider has checked them against the paper and cleared them for release (<code>AGENTS.md</code>).</li>
-<li><strong><code>.gitignore</code>:</strong> excludes <code>data-raw/</code>, <code>Archive/</code>, any copy of the original code that still holds the restricted values, data formats, Stata logs, Word, PDF and HTML files outside <code>docs/</code>, <code>figures/</code>, <code>tables/</code>, credentials and caches. Ignoring a folder does not stop anyone, or any connected tool, from reading it.</li>
+<li><strong><code>.gitignore</code>:</strong> excludes <code>data-raw/</code>, <code>Archive/</code>, any copy of the original code that still holds the restricted values, data formats, Stata logs, <code>docs/</code> (the local render), Word, PDF and HTML files, <code>figures/</code>, <code>tables/</code>, credentials and caches. Ignoring a folder does not stop anyone, or any connected tool, from reading it.</li>
 </ul>
 
 

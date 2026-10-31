@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-243619feadb355500505c6593e83032b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -480,7 +480,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 </section>
 <section id="day-jitter" class="level2">
 <h2 class="anchored" data-anchor-id="day-jitter">Day jitter</h2>
-<p>Moves each day offset by its own random whole number of days, from minus to plus the given maximum. A shift that would carry an event across day 0 is applied in the opposite direction instead, so every event stays in its own period, matching how periods are assigned (after day 0 is post-intervention). The seed is set only inside the function, so the shifts are the same on every run and nothing else in the session is affected.</p>
+<p>Moves each day offset by its own random whole number of days, from minus to plus the given maximum. A shift that would carry an event across day 0 is applied in the opposite direction instead, so every event stays in its own period, matching how periods are assigned (after day 0 is post-intervention). The same happens to a shift that would move an event from before day 0 onto day 0 itself, where the timeline draws no line. The seed is set only inside the function, so the shifts are the same on every run and nothing else in the session is affected.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to show/hide R Code</summary>
@@ -488,20 +488,22 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># -max_days to max_days, all equally likely. A shift never moves a value to</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the other side of day 0 (decided 29 October 2026): values at or before day 0</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># stay at or before it, and values after it stay after it, matching how the</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># periods are assigned (post-intervention means after day 0). A shift that</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># would cross is applied in the opposite direction instead. Missing values</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># stay missing. The seed is set only inside this function, so the shifts are</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># the same on every run and nothing else in the session is affected.</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>jitter_days <span class="ot">&lt;-</span> <span class="cf">function</span>(x, max_days, seed) {</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  shifts <span class="ot">&lt;-</span> withr<span class="sc">::</span><span class="fu">with_seed</span>(</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    seed,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="sc">-</span>max_days, max_days), <span class="fu">length</span>(x), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  shifted <span class="ot">&lt;-</span> x <span class="sc">+</span> shifts</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  crossed <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">is.na</span>(x) <span class="sc">&amp;</span> ((x <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="sc">!=</span> (shifted <span class="sc">&lt;=</span> <span class="dv">0</span>))</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  shifted[crossed] <span class="ot">&lt;-</span> x[crossed] <span class="sc">-</span> shifts[crossed]</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  shifted</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># periods are assigned (post-intervention means after day 0). A value before</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># day 0 is also never moved onto day 0 itself, where the timeline draws no</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># line. A shift that would cross, or land a value from before day 0 on day 0,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># is applied in the opposite direction instead. Missing values stay missing.</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The seed is set only inside this function, so the shifts are the same on</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># every run and nothing else in the session is affected.</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>jitter_days <span class="ot">&lt;-</span> <span class="cf">function</span>(x, max_days, seed) {</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  shifts <span class="ot">&lt;-</span> withr<span class="sc">::</span><span class="fu">with_seed</span>(</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    seed,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="sc">-</span>max_days, max_days), <span class="fu">length</span>(x), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  shifted <span class="ot">&lt;-</span> x <span class="sc">+</span> shifts</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  crossed <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">is.na</span>(x) <span class="sc">&amp;</span> (((x <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="sc">!=</span> (shifted <span class="sc">&lt;=</span> <span class="dv">0</span>)) <span class="sc">|</span> (x <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> shifted <span class="sc">==</span> <span class="dv">0</span>))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  shifted[crossed] <span class="ot">&lt;-</span> x[crossed] <span class="sc">-</span> shifts[crossed]</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  shifted</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1054,7 +1056,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Day jitter</span></span>
 <span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>Moves each day offset by its own random whole number of days, from minus to plus the given maximum. A shift that would carry an event across day 0 is applied in the opposite direction instead, so every event stays in its own period, matching how periods are assigned (after day 0 is post-intervention). The seed is set only inside the function, so the shifts are the same on every run and nothing else in the session is affected.</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>Moves each day offset by its own random whole number of days, from minus to plus the given maximum. A shift that would carry an event across day 0 is applied in the opposite direction instead, so every event stays in its own period, matching how periods are assigned (after day 0 is post-intervention). The same happens to a shift that would move an event from before day 0 onto day 0 itself, where the timeline draws no line. The seed is set only inside the function, so the shifts are the same on every run and nothing else in the session is affected.</span>
 <span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: jitter-days</span></span>
