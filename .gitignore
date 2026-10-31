@@ -6,7 +6,9 @@
 .httr-oauth
 .DS_Store
 
-# Quarto (docs/ is NOT ignored: it is the published site)
+# Quarto. docs/ is the local render; GitHub Actions renders the site and
+# publishes it to the gh-pages branch (.github/workflows/publish.yml)
+/docs/
 /.quarto/
 **/*.quarto_ipynb
 /_freeze/
@@ -58,13 +60,12 @@
 
 # Knitted or saved outputs outside the site. Rendered Word, PDF and HTML files
 # can hold results from real data, and saved htmlwidgets (such as the plotly
-# patient timeline) embed every data point. docs/ is the only place HTML is
-# tracked.
+# patient timeline) embed every data point. No HTML is tracked; the site is
+# published from the gh-pages branch.
 *.docx
 *.doc
 *.pdf
 *.html
-!/docs/**/*.html
 *_files/
 ~$*
 
