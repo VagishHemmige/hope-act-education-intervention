@@ -20,7 +20,7 @@ repository/
 ├── references/              # Supporting literature and evidence
 ├── quarto/                  # Explanatory Quarto pages
 ├── _extensions/             # Quarto extensions, when used
-├── docs/                    # Rendered website, served by GitHub Pages
+├── docs/                    # Local render of the website (ignored; published to gh-pages)
 ├── _quarto.yml              # Quarto configuration
 ├── index.qmd                # Website entry point
 ├── README.Rmd               # Source for README.md
@@ -55,4 +55,4 @@ Two folders exist only on the maintainer's computer and are never committed:
 ## Outputs and version control
 
 - Outputs from the restricted data stay local and out of Git until the decider has checked them against the paper and cleared them for release (`AGENTS.md`).
-- **`.gitignore`:** excludes `data-raw/`, `Archive/`, any copy of the original code that still holds the restricted values, data formats, Stata logs, Word, PDF and HTML files outside `docs/`, `figures/`, `tables/`, credentials and caches. Ignoring a folder does not stop anyone, or any connected tool, from reading it.
+- **`.gitignore`:** excludes `data-raw/`, `Archive/`, any copy of the original code that still holds the restricted values, data formats, Stata logs, `docs/` (the local render), Word, PDF and HTML files, `figures/`, `tables/`, credentials and caches. Ignoring a folder does not stop anyone, or any connected tool, from reading it.

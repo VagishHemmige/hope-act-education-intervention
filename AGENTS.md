@@ -82,7 +82,7 @@ The site documents the code. It does not run the analysis.
 - Each page loads its script with `knitr::read_chunk("../R/<script>.R")` in a hidden chunk and shows each labelled section with `#| eval: false`, with prose explaining what the section does and why. Pages link to the script on GitHub and to the scripts it depends on.
 - **Never evaluate analysis code in the site.** Pages render without restricted data.
 - The original R Markdown file is shown on its own page as code only. The page says which lines and header fields were edited for publication and why.
-- The site renders to `docs/` and is served by GitHub Pages. When you add a script, add its page and sidebar entry in the same pull request, and re-render.
+- The site renders to `docs/`, which is not committed. `.github/workflows/publish.yml` renders it on every pull request as a check and, on each push to `master`, publishes it to the `gh-pages` branch, which GitHub Pages serves. When you add a script, add its page and sidebar entry in the same pull request; render locally to preview, but do not commit the output.
 - **Prose must match the code.** If a change alters what a section does, update its explanation in the same pull request.
 
 ## Outputs
