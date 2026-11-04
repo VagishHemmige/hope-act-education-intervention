@@ -6,6 +6,7 @@
     "section": "",
     "text": "Prepares the offer-level data, in the original code’s order: dates, duplicate removal, period, the derived offer measures, the link to study IDs, and the listed correction (analysis plan, sections 4, 5 and 7).",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "3. Organ offers"
     ]
@@ -17,6 +18,7 @@
     "section": "Dates, duplicates, period and offer measures",
     "text": "Dates, duplicates, period and offer measures\nMatch dates are read as dates, and repeated offers of the same donor to the same candidate are reduced to one. An offer is post-intervention when it was made after day 0. Two measures are derived: whether at least one kidney from the offer’s donor was transplanted at any center, with a missing count taken as not transplanted; and, for declined offers only, whether the refusal code is one of the four counted as potentially HIV-related.\n\n\nClick to show/hide R Code\norgan_offers_processed &lt;- organ_offers_unprocessed %&gt;%\n  # Convert string to date format for Match_Date\n  mutate(Match_Date = mdy(Match_Date)) %&gt;%\n  # Remove duplicates: one row per candidate and donor\n  distinct(PX_ID, Donor_ID, .keep_all = TRUE) %&gt;%\n  # Mark the post-intervention period\n  mutate(Post_Intervention = Match_Date &gt; InterventionDate) %&gt;%\n  # Mark whether the donor's organ was transplanted (regardless of where)\n  mutate(organ_was_transplanted = case_when(\n    Number_of_Kidneys_tranplanted_from_Donor &gt;= 1 ~ TRUE,\n    Number_of_Kidneys_tranplanted_from_Donor == 0 ~ FALSE,\n    is.na(Number_of_Kidneys_tranplanted_from_Donor) ~ FALSE)) %&gt;%\n  # Mark whether a declined organ was declined for donor concerns potentially\n  # related to HIV status\n  mutate(Potential_HIV_Donor_decline = case_when(\n    (Offer_Acceptance == \"No\") & (Primary_Refusal_Reason %in% HIV_reason_list) ~ TRUE,\n    (Offer_Acceptance == \"No\") & !(Primary_Refusal_Reason %in% HIV_reason_list) ~ FALSE,\n    !(Offer_Acceptance == \"No\") ~ NA)) %&gt;%\n  # Sort by donor ID\n  arrange(Donor_ID)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "3. Organ offers"
     ]
@@ -28,6 +30,7 @@
     "section": "Link to study IDs",
     "text": "Link to study IDs\nOffers are linked to candidates’ study IDs by last name, as in the original code. An identifier would be better practice; the name is used only inside this step and dropped straight after. The original join used every column the two tables share, which is only the last name when the offers have no study ID column, so the step checks that, and stops if the join would duplicate offers.\n\n\nClick to show/hide R Code\n# Offers are linked to study IDs by candidate last name, as in the original\n# code (decided 29 October 2026; an identifier would be better practice).\n# The original join used every column the two tables share; that is only the\n# last name when the offers have no Study_ID column, which is checked here.\n# Names stay inside this step and are dropped straight after the join.\nif (\"Study_ID\" %in% names(organ_offers_processed)) {\n  stop(\"The offers file already has a Study_ID column, so the original code's \",\n       \"join would also have matched on it. Check before continuing.\", call. = FALSE)\n}\n\nnames_Study_ID_crosswalk &lt;- transplant_data_unprocessed %&gt;%\n  select(Study_ID, Candidate_Last_Name)\n\nrows_before &lt;- nrow(organ_offers_processed)\norgan_offers_processed &lt;- organ_offers_processed %&gt;%\n  left_join(names_Study_ID_crosswalk, by = \"Candidate_Last_Name\") %&gt;%\n  select(-Candidate_Last_Name)\ncheck_rows_unchanged(rows_before, nrow(organ_offers_processed),\n                     \"Linking offers to study IDs (two candidates may share a last name)\")\n\nrm(names_Study_ID_crosswalk, rows_before)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "3. Organ offers"
     ]
@@ -39,6 +42,7 @@
     "section": "Correction",
     "text": "Correction\nOne accepted offer is recoded as a provisional acceptance, because the recipient became ineligible before transplant. For patient privacy, the record and the new value are read from the restricted corrections file, not written here.\n\n\nClick to show/hide R Code\n# One accepted offer is recoded as a provisional acceptance, because the\n# recipient became ineligible before transplant. The record's identifier is\n# kept in the restricted corrections file, not here, for patient privacy.\norgan_offers_processed &lt;- apply_record_corrections(\n  organ_offers_processed,\n  record_corrections,\n  source_name = \"organ_offers\",\n  id_column = \"Match_ID\"\n)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "3. Organ offers"
     ]
@@ -116,6 +120,7 @@
     "section": "",
     "text": "This script attaches every package the analysis uses, says where each file is, defines the constants a reader might want to check, and reads the values kept out of the code for patient privacy. Other scripts never call library() or hard-code a value.",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Setup"
     ]
@@ -127,6 +132,7 @@
     "section": "Packages",
     "text": "Packages\nThe tidyverse and lubridate handle the data and dates, readxl reads the spreadsheets, gtsummary and gt build the tables, janitor and strex tidy the demographics spreadsheet, plotly makes the interactive timeline, and yaml reads the restricted parameters. lubridate must stay attached: base R compares a date-time with a date incorrectly, and the period assignment relies on lubridate getting it right.\n\n\nClick to show/hide R Code\nlibrary(tidyverse)\nlibrary(readxl)\nlibrary(lubridate)   # also needed so date-times compare correctly with dates\nlibrary(gtsummary)\nlibrary(gt)\nlibrary(janitor)\nlibrary(strex)\nlibrary(plotly)      # 4.11.0 or later is needed with ggplot2 4.0 or later\nlibrary(yaml)",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Setup"
     ]
@@ -138,6 +144,7 @@
     "section": "Package versions",
     "text": "Package versions\nggplotly() in plotly versions before 4.11.0 fails with ggplot2 4.0 or later, with an error far from its cause. The run stops at the start instead, saying which version to install.\n\n\nClick to show/hide R Code\n# ggplotly() in plotly before 4.11.0 fails with ggplot2 4.0 or later\n# (\"unused argument\" in train()).\nif (packageVersion(\"ggplot2\") &gt;= \"4.0.0\" && packageVersion(\"plotly\") &lt; \"4.11.0\") {\n  stop(\"With ggplot2 \", packageVersion(\"ggplot2\"), \", plotly 4.11.0 or later is needed \",\n       \"(installed: \", packageVersion(\"plotly\"), \"). Run install.packages(\\\"plotly\\\").\",\n       call. = FALSE)\n}",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Setup"
     ]
@@ -149,6 +156,7 @@
     "section": "File locations",
     "text": "File locations\nEvery input is in the project’s data-raw/ folder, which Git ignores, and every output goes to tables/ or figures/, which Git also ignores until the outputs are cleared. No path outside the project is used.\n\n\nClick to show/hide R Code\ndata_dir &lt;- \"data-raw\"\noffers_file &lt;- file.path(data_dir, \"organ-offers-clean.xls\")\nsubjects_file &lt;- file.path(data_dir, \"subjects-clean-2022-05-04.xlsx\")\ndemographics_file &lt;- file.path(data_dir, \"demographics-2023-09-18.xlsx\")\nrestricted_parameters_file &lt;- file.path(data_dir, \"restricted-parameters.yml\")\nrecord_corrections_file &lt;- file.path(data_dir, \"record-corrections.csv\")\ntables_dir &lt;- \"tables\"\nfigures_dir &lt;- \"figures\"",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Setup"
     ]
@@ -160,6 +168,7 @@
     "section": "Study constants",
     "text": "Study constants\nThe four OPTN refusal codes counted as a potentially HIV-related decline (analysis plan, section 7), written exactly as they appear in the data; the paper calls the first one “Donor quality”. And the size of the random shift applied to each event in the patient timeline: up to two days, the precision of the published figure (analysis plan, section 10).\n\n\nClick to show/hide R Code\n# OPTN refusal codes counted as a potentially HIV-related decline, exactly as\n# they appear in the data (analysis-plan.md section 7). The paper calls the\n# first one \"Donor quality\".\nHIV_reason_list &lt;- c(\n  \"Donor age or quality\",\n  \"Donor medical history, specify\",\n  \"Donor social history\",\n  \"Positive infectious disease screening test: CMV, HBV, HCV, etc.\"\n)\n\n# Patient timeline: each plotted event is moved by its own random shift of up\n# to this many days, the precision of the published static figure\n# (analysis-plan.md section 10).\ntimeline_jitter_days &lt;- 2",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Setup"
     ]
@@ -171,6 +180,7 @@
     "section": "Restricted values",
     "text": "Restricted values\nThe intervention date and the timeline’s random seed are read from data-raw/restricted-parameters.yml, and the record corrections from data-raw/record-corrections.csv. They are kept out of the code for patient privacy: with the exact intervention date, the day offsets in the analysis would give each patient’s event dates, and with the seed, the timeline’s shifts could be regenerated and removed. The step checks that each file has what the analysis needs and never prints the values.\n\n\nClick to show/hide R Code\n# The intervention date (day 0) and the timeline's random seed are kept in the\n# restricted folder, not in the code: with exact day offsets, the intervention\n# date would give each candidate's event dates, and a public seed would let the\n# timeline's shifts be regenerated and removed. Their values are never printed.\ncheck_files_exist(c(restricted_parameters_file, record_corrections_file))\n\nrestricted_parameters &lt;- read_yaml(restricted_parameters_file)\ncheck_names_present(\n  names(restricted_parameters),\n  c(\"intervention_date\", \"timeline_jitter_seed\"),\n  restricted_parameters_file\n)\nInterventionDate &lt;- ymd(restricted_parameters$intervention_date, quiet = TRUE)\nif (is.na(InterventionDate)) {\n  stop(\"intervention_date in \", restricted_parameters_file,\n       \" is not a date written as YYYY-MM-DD.\", call. = FALSE)\n}\ntimeline_jitter_seed &lt;- as.integer(restricted_parameters$timeline_jitter_seed)\nif (is.na(timeline_jitter_seed)) {\n  stop(\"timeline_jitter_seed in \", restricted_parameters_file,\n       \" is not a whole number.\", call. = FALSE)\n}\nrm(restricted_parameters)\n\n# Record-level corrections: one row per corrected value, with the reason.\nrecord_corrections &lt;- read_csv(\n  record_corrections_file,\n  col_types = cols(.default = col_character())\n)\ncheck_names_present(\n  names(record_corrections),\n  c(\"source\", \"record_id\", \"field\", \"corrected_value\", \"reason\"),\n  record_corrections_file\n)",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Setup"
     ]
@@ -182,6 +192,7 @@
     "section": "",
     "text": "Expands each candidate’s follow-up into one row per day, assigns each day to the pre- or post-intervention period, and marks the day of transplant, as in the original code. The models use these rows to compare transplant rates.",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "2. Person-days"
     ]
@@ -193,6 +204,7 @@
     "section": "One row per day",
     "text": "One row per day\nEach candidate contributes one row per day from consent to the end of follow-up; day k starts k − 1 days after consent and ends k days after. Follow-up must be measured in days: R chooses the units of a difference between date-times from the smallest one in the column, so a candidate with less than a day of follow-up would make every candidate expand into seconds. The step stops in that case.\n\n\nClick to show/hide R Code\n# Each candidate contributes one row per day from consent to the end of\n# follow-up. Day k starts k - 1 days after consent and ends k days after.\n# The original code's duration is End_Date - Date_of_consent, whose units R\n# chooses from the smallest difference in the column: days when every\n# candidate has at least a day of follow-up, but seconds if any candidate has\n# none, which would expand every candidate into seconds. Stop rather than\n# reproduce that; the published analysis must have had days.\nfollow_up_length &lt;- transplant_data_unprocessed$End_Date - transplant_data_unprocessed$Date_of_consent\nif (units(follow_up_length) != \"days\") {\n  stop(\"Follow-up lengths are in \", units(follow_up_length),\n       \", not days, because a candidate has less than a day of follow-up. \",\n       \"The original code would expand follow-up incorrectly.\", call. = FALSE)\n}\nrm(follow_up_length)\n\ntransplant_data_processed &lt;- transplant_data_unprocessed %&gt;%\n  mutate(duration = as.numeric(End_Date - Date_of_consent)) %&gt;%\n  uncount(duration) %&gt;%\n  group_by(Study_ID) %&gt;%\n  mutate(start_date = days(row_number()) + Date_of_consent - days(1),\n         stop_date = days(row_number()) + Date_of_consent)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "2. Person-days"
     ]
@@ -204,6 +216,7 @@
     "section": "Period",
     "text": "Period\nA day is post-intervention when it starts after day 0, the intervention date read in Setup (analysis plan, section 5).\n\n\nClick to show/hide R Code\n# A day is post-intervention when it starts after day 0.\ntransplant_data_processed &lt;- transplant_data_processed %&gt;%\n  mutate(Post_Intervention = start_date &gt; InterventionDate)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "2. Person-days"
     ]
@@ -215,6 +228,7 @@
     "section": "Transplant day",
     "text": "Transplant day\nA transplant counts on the day that ends on the transplant date; every other day counts 0. A second outcome counts only transplants from donors with HIV.\n\n\nClick to show/hide R Code\n# A transplant counts on the day that ends on the transplant date; every other\n# day counts 0. The D+/R+ outcome counts only transplants from donors with HIV.\ntransplant_data_processed &lt;- transplant_data_processed %&gt;%\n  mutate(Is_Transplant_date = (Date_of_TXP == stop_date)) %&gt;%\n  mutate(Is_Transplant_date = if_else(is.na(Is_Transplant_date), FALSE, Is_Transplant_date)) %&gt;%\n  mutate(Transplant_Outcome = ifelse(Is_Transplant_date, Transplanted, 0)) %&gt;%\n  mutate(HIV_Transplant_Outcome = ifelse(Is_Transplant_date, HIV_transplanted, 0))",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "2. Person-days"
     ]
@@ -226,6 +240,7 @@
     "section": "Checks",
     "text": "Checks\nThe days must add up to each candidate’s follow-up, and no candidate may have two transplant days.\n\n\nClick to show/hide R Code\n# Every candidate's days are present, and a candidate's transplant is counted\n# at most once.\nexpected_days &lt;- transplant_data_unprocessed %&gt;%\n  mutate(duration = as.numeric(End_Date - Date_of_consent)) %&gt;%\n  pull(duration) %&gt;%\n  sum()\ncheck_rows_unchanged(expected_days, nrow(transplant_data_processed),\n                     \"Expanding follow-up into days\")\n\ntransplants_counted_twice &lt;- transplant_data_processed %&gt;%\n  summarise(transplant_days = sum(Is_Transplant_date)) %&gt;%\n  filter(transplant_days &gt; 1)\nif (nrow(transplants_counted_twice) &gt; 0) {\n  stop(\"A candidate has more than one transplant day.\", call. = FALSE)\n}\nrm(expected_days, transplants_counted_twice)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "2. Person-days"
     ]
@@ -237,6 +252,7 @@
     "section": "",
     "text": "Reads the three study files from data-raw/, exactly as the original code did; only their names and location changed. Each read checks the columns later steps use, so a changed file stops the run instead of being misread.",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "1. Loading the data"
     ]
@@ -248,6 +264,7 @@
     "section": "Files present",
     "text": "Files present\nStops, naming the missing file, if any of the three study files is not in data-raw/.\n\n\nClick to show/hide R Code\ncheck_files_exist(c(offers_file, subjects_file, demographics_file))",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "1. Loading the data"
     ]
@@ -259,6 +276,7 @@
     "section": "Organ offers",
     "text": "Organ offers\nOne row per offer from a donor with HIV to one of the center’s candidates, from the metrics the center submitted to UNOS, with the OPTN refusal code recorded for each declined offer.\n\n\nClick to show/hide R Code\norgan_offers_unprocessed &lt;- read_excel(offers_file)\n\ncheck_names_present(\n  names(organ_offers_unprocessed),\n  c(\"PX_ID\", \"Donor_ID\", \"Match_ID\", \"Match_Date\", \"Candidate_Last_Name\",\n    \"HIV_Pos_to_Pos\", \"Offer_Acceptance\", \"Primary_Refusal_Reason\",\n    \"Number_of_Kidneys_tranplanted_from_Donor\"),\n  offers_file\n)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "1. Loading the data"
     ]
@@ -270,6 +288,7 @@
     "section": "Candidates",
     "text": "Candidates\nOne row per candidate who consented to the center’s HOPE listing, with the dates of consent, end of follow-up and transplant, and whether the candidate was transplanted and whether from a donor with HIV. Column types are given by position, as in the original, so the step checks that the three date columns were read as dates.\n\n\nClick to show/hide R Code\n# Column types by position, as in the original code.\ntransplant_data_unprocessed &lt;- read_excel(\n  subjects_file,\n  col_types = c(\"text\", \"text\", \"text\", \"text\",\n                \"date\", \"date\", \"date\", \"numeric\",\n                \"numeric\", \"text\", \"text\")\n)\n\ncheck_names_present(\n  names(transplant_data_unprocessed),\n  c(\"Study_ID\", \"Candidate_Last_Name\", \"Date_of_consent\", \"End_Date\",\n    \"Date_of_TXP\", \"Transplanted\", \"HIV_transplanted\", \"Listing_Status\"),\n  subjects_file\n)\nnot_dates &lt;- c(\"Date_of_consent\", \"End_Date\", \"Date_of_TXP\") |&gt;\n  purrr::discard(\\(column) inherits(transplant_data_unprocessed[[column]], \"POSIXct\"))\nif (length(not_dates) &gt; 0) {\n  stop(\"In \", subjects_file, \" these columns were not read as dates: \",\n       paste(not_dates, collapse = \", \"),\n       \". Check the column order against col_types.\", call. = FALSE)\n}\nrm(not_dates)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "1. Loading the data"
     ]
@@ -281,6 +300,7 @@
     "section": "Candidate, donor and transplant characteristics",
     "text": "Candidate, donor and transplant characteristics\nThe characteristics in Supplemental Tables 1 and 2, processed on the candidate characteristics page.\n\n\nClick to show/hide R Code\nDemographics_unprocessed &lt;- read_excel(demographics_file)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "1. Loading the data"
     ]
@@ -383,8 +403,9 @@
     "href": "quarto/models.html",
     "title": "5. Models",
     "section": "",
-    "text": "Fits the Poisson models of transplant rate after versus before the intervention, as published (analysis plan, section 8).",
+    "text": "PendingProvisional\n\n\n\nText highlighted like this is provisional: it depends on a decision the analysis plan has not yet made. To comment on any part of this page, highlight the text and use the 💬 Comment button.\nFits the Poisson models of transplant rate after versus before the intervention, as published (analysis plan, section 8).",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "5. Models"
     ]
@@ -396,6 +417,7 @@
     "section": "Poisson models",
     "text": "Poisson models\nOne row per candidate-day, so the rate is per candidate-day and the exponentiated coefficient is the incidence rate ratio, post- versus pre-intervention. One model counts all transplants and the other only transplants from donors with HIV. As published, the models do not account for repeated days within a candidate; standard errors that do are an open decision (#3).\n\n\nClick to show/hide R Code\n# Poisson GLM, all transplants as outcome\nm1 &lt;- glm(Transplant_Outcome ~ Post_Intervention, family = \"poisson\",\n          data = transplant_data_processed)\n\n# Poisson GLM, HIV D+ transplants as outcome\nm2 &lt;- glm(HIV_Transplant_Outcome ~ Post_Intervention, family = \"poisson\",\n          data = transplant_data_processed)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "5. Models"
     ]
@@ -407,6 +429,7 @@
     "section": "",
     "text": "Draws the patient timeline, the paper’s Supplemental Figure 1, as a static image and as an interactive page, both saved to the gitignored figures/ folder.",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Figures"
     ]
@@ -418,6 +441,7 @@
     "section": "Follow-up",
     "text": "Follow-up\nDays from day 0 to each candidate’s consent and end of follow-up. Each is moved by its own random shift of up to two days, never across day 0, so the figure is no more precise than the published static one; the interactive page embeds every plotted value, which is why the shift comes before plotting. The end of follow-up is one event, so its shifted day is used for both the end of the line and the end marker.\n\n\nClick to show/hide R Code\n# Days from day 0 to each candidate's consent and end of follow-up, each\n# shifted at random. The end of follow-up is one event: its shifted day is used\n# both for the end of the candidate's line and for its end-of-follow-up point.\ntimeline_follow_up &lt;- transplant_data_unprocessed %&gt;%\n  transmute(\n    Study_ID,\n    consent_day = as.numeric(as.Date(Date_of_consent) - as.Date(InterventionDate)),\n    end_day = as.numeric(as.Date(End_Date) - as.Date(InterventionDate))\n  ) %&gt;%\n  mutate(\n    consent_day = jitter_days(consent_day, timeline_jitter_days, timeline_jitter_seed),\n    end_day = jitter_days(end_day, timeline_jitter_days, timeline_jitter_seed + 1L)\n  )",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Figures"
     ]
@@ -429,6 +453,7 @@
     "section": "Events",
     "text": "Events\nOffers, as declined, accepted but not transplanted, or accepted and transplanted, each at its own shifted day; and how follow-up ended for candidates not transplanted from a donor with HIV.\n\n\nClick to show/hide R Code\n# Offers, as declined, accepted but not transplanted, or accepted and\n# transplanted, each at its own shifted day.\ngraphic_data_points_1 &lt;- organ_offers_processed %&gt;%\n  mutate(Event = case_when(\n    Offer_Acceptance == \"No\" ~ \"HIV offer declined\",\n    Offer_Acceptance == \"Provisional Acceptance\" ~ \"HIV offer accepted, but not transplanted\",\n    Offer_Acceptance == \"Yes\" ~ \"HIV offer accepted and transplanted\")) %&gt;%\n  mutate(endpoint = as.numeric(as.Date(Match_Date) - as.Date(InterventionDate))) %&gt;%\n  mutate(endpoint = jitter_days(endpoint, timeline_jitter_days, timeline_jitter_seed + 2L)) %&gt;%\n  select(Study_ID, endpoint, Event)\n\n# How follow-up ended, for candidates not transplanted from a donor with HIV,\n# at the shifted end of follow-up.\ngraphic_data_points_2 &lt;- transplant_data_unprocessed %&gt;%\n  filter(HIV_transplanted == 0) %&gt;%\n  mutate(Event = case_when(\n    Transplanted == 1 & HIV_transplanted == 0 ~ \"Non-HIV offer accepted and transplanted\",\n    str_detect(Listing_Status, \"Deceased\") ~ \"Death\",\n    str_detect(Listing_Status, \"Withdrawn\") ~ \"Permanently delisted\",\n    TRUE ~ \"End of study period\")) %&gt;%\n  select(Study_ID, Event) %&gt;%\n  left_join(select(timeline_follow_up, Study_ID, endpoint = end_day),\n            by = \"Study_ID\", relationship = \"one-to-one\")\n\ngraphic_data_points &lt;- bind_rows(graphic_data_points_1, graphic_data_points_2) %&gt;%\n  mutate(Study_ID = as.factor(Study_ID))\n\nrm(graphic_data_points_1, graphic_data_points_2)",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Figures"
     ]
@@ -440,6 +465,7 @@
     "section": "Lines",
     "text": "Lines\nEach candidate’s follow-up as up to two segments split at day 0: red before the intervention and blue after, as in the original code.\n\n\nClick to show/hide R Code\n# Each candidate's follow-up as up to two segments, split at day 0: before the\n# intervention (red) and after it (blue). The split logic is the original code's.\ngraphic_data_lines &lt;- timeline_follow_up %&gt;%\n  rename(endpoint_left = consent_day, endpoint_right = end_day) %&gt;%\n  mutate(endpoint1_left = case_when(\n    endpoint_left &lt; 0 ~ endpoint_left,\n    endpoint_left &gt;= 0 ~ NA_real_)) %&gt;%\n  mutate(endpoint1_right = case_when(\n    endpoint_left &lt; 0 & endpoint_right &gt; 0 ~ 0,\n    endpoint_left &lt; 0 & endpoint_right &lt; 0 ~ endpoint_right,\n    endpoint_left &gt;= 0 ~ NA_real_)) %&gt;%\n  mutate(endpoint2_left = case_when(\n    endpoint_left &lt; 0 & endpoint_right &gt; 0 ~ 0,\n    endpoint_left &gt; 0 & endpoint_right &gt; 0 ~ endpoint_left,\n    endpoint_right &lt;= 0 ~ NA_real_)) %&gt;%\n  mutate(endpoint2_right = case_when(\n    endpoint_right &gt; 0 ~ endpoint_right,\n    endpoint_right &lt;= 0 ~ NA_real_)) %&gt;%\n  select(Study_ID, endpoint1_left, endpoint1_right, endpoint2_left, endpoint2_right) %&gt;%\n  mutate(Study_ID = as.factor(Study_ID))",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Figures"
     ]
@@ -451,6 +477,7 @@
     "section": "Plot",
     "text": "Plot\nThe original figure’s layers and styling. A candidate followed only before, or only after, day 0 has no segment on the other side; it is dropped without a warning.\n\n\nClick to show/hide R Code\n# A candidate followed only before, or only after, day 0 has no segment on the\n# other side, so that segment is missing. na.rm = TRUE drops it quietly, as\n# ggplot would anyway, instead of printing a warning that counts them.\nplot1 &lt;- ggplot() +\n  geom_segment(data = graphic_data_lines,\n               mapping = aes(x = endpoint2_left, xend = endpoint2_right,\n                             y = Study_ID, yend = Study_ID),\n               color = \"blue\", na.rm = TRUE) +\n  geom_segment(data = graphic_data_lines,\n               mapping = aes(x = endpoint1_left, xend = endpoint1_right,\n                             y = Study_ID, yend = Study_ID),\n               color = \"red\", na.rm = TRUE) +\n  geom_vline(xintercept = 0) +\n  geom_point(data = graphic_data_points,\n             mapping = aes(x = endpoint, y = Study_ID, color = Event, shape = Event),\n             alpha = 0.7) +\n  labs(y = \"Study ID\", x = \"Days before or after study intervention (Date of Intervention=0)\") +\n  scale_x_continuous(breaks = seq(-1095, 720, 365)) +\n  scale_shape_manual(values = c(0, 1, 2, 3, 4, 5, 6)) +\n  theme_classic() +\n  theme(legend.position = \"bottom\")",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Figures"
     ]
@@ -462,6 +489,7 @@
     "section": "Export",
     "text": "Export\nA PNG image and a self-contained interactive page in figures/, which stays out of Git until the figure is cleared.\n\n\nClick to show/hide R Code\n# Saved to figures/, which stays out of Git until the figure is cleared.\ndir.create(figures_dir, showWarnings = FALSE)\nggsave(file.path(figures_dir, \"timeline.png\"), plot1, width = 9, height = 7, dpi = 300)\n\ntimeline_interactive &lt;- ggplotly(plot1, tooltip = c(\"y\", \"color\")) %&gt;%\n  layout(legend = list(orientation = \"h\", x = 0, y = -0.2))\nhtmlwidgets::saveWidget(timeline_interactive, file.path(figures_dir, \"timeline.html\"),\n                        selfcontained = TRUE)",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Figures"
     ]
@@ -533,6 +561,7 @@
     "section": "",
     "text": "Builds the published tables and saves them to the gitignored tables/ folder. The tables carry the paper’s labels, applied to copies of the data used only for display, so the labels cannot change a number.",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -544,6 +573,7 @@
     "section": "Candidates and donors with offers",
     "text": "Candidates and donors with offers\nThe number of distinct candidates who received offers, and of distinct donors.\n\n\nClick to show/hide R Code\n# How many distinct candidates received offers, and from how many donors?\noffer_counts &lt;- tibble(\n  candidates_with_offers = length(unique(organ_offers_processed$PX_ID)),\n  distinct_donors = length(unique(organ_offers_processed$Donor_ID))\n)",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -555,6 +585,7 @@
     "section": "Labels for the offer tables",
     "text": "Labels for the offer tables\nThe paper’s names for the periods, the acceptance categories and the refusal codes, in the default order, with a dagger on the four codes counted as potentially HIV-related, and the paper’s row labels.\n\n\nClick to show/hide R Code\n# Display copy of the offers, with the paper's names for the period, the\n# acceptance categories and the refusal codes. Category order is unchanged.\n# The paper marks with a dagger the refusal codes counted as potentially\n# HIV-related.\nperiod_labels &lt;- c(\"FALSE\" = \"Pre-intervention\", \"TRUE\" = \"Post-intervention\")\n\noffers_for_tables &lt;- organ_offers_processed %&gt;%\n  mutate(\n    Post_Intervention = relabel_levels(Post_Intervention, period_labels),\n    Offer_Acceptance = relabel_levels(Offer_Acceptance,\n                                      c(\"Provisional Acceptance\" = \"Provisional\")),\n    Primary_Refusal_Reason = relabel_levels(Primary_Refusal_Reason, c(\n      \"Candidate requires multiple organ transplant\" = \"Candidate requires multiple organ transplants\",\n      \"Donor age or quality\" = \"Donor quality†\",\n      \"Donor medical history, specify\" = \"Donor medical history, specify†\",\n      \"Donor social history\" = \"Donor social history†\",\n      \"Epidemic/Pandemic - Donor\" = \"Epidemic/Pandemic – Donor\",\n      \"Patient txed, tx in progress, or other offer being considered\" =\n        \"Patient transplanted, transplant in progress, or other offer being considered\",\n      \"Positive infectious disease screening test: CMV, HBV, HCV, etc.\" =\n        \"Positive infectious disease screening test: CMV, HBV, HCV, etc.†\"\n    ))\n  )\n\n# Row labels, by variable; each table uses those of the variables it shows.\noffer_labels &lt;- list(\n  HIV_Pos_to_Pos = \"HIV-positive donor to HIV-positive recipient\",\n  Match_Date = \"Match Date\",\n  Offer_Acceptance = \"Offer Acceptance\",\n  Primary_Refusal_Reason = \"Primary Refusal Reason\",\n  Post_Intervention = \"Intervention period\",\n  organ_was_transplanted = \"Organ was ultimately transplanted at another center\",\n  Potential_HIV_Donor_decline = \"Potential HIV Donor decline\"\n)\n\nhiv_code_note &lt;- \"† Refusal codes counted as a potentially HIV-related decline.\"",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -566,6 +597,7 @@
     "section": "All offers",
     "text": "All offers\nEvery offer, overall.\n\n\nClick to show/hide R Code\ntable_offers_overall &lt;- offers_for_tables %&gt;%\n  select(HIV_Pos_to_Pos, Match_Date, Offer_Acceptance, Primary_Refusal_Reason, Post_Intervention,\n         organ_was_transplanted, Potential_HIV_Donor_decline) %&gt;%\n  tbl_summary(label = offer_labels,\n              statistic = list(Match_Date ~ \"{min} to {max}\")) %&gt;%\n  modify_header(label ~ \"**Offer characteristic**\") %&gt;%\n  modify_source_note(hiv_code_note)",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -577,6 +609,7 @@
     "section": "Table 2",
     "text": "Table 2\nOffers by period, with tests by period. Match dates are shown as a range, as in the paper.\n\n\nClick to show/hide R Code\n# Paper Table 2. Match dates are shown as a range, as in the paper.\ntable_offers_by_period &lt;- offers_for_tables %&gt;%\n  select(Match_Date, Offer_Acceptance, Primary_Refusal_Reason, Post_Intervention,\n         organ_was_transplanted, Potential_HIV_Donor_decline) %&gt;%\n  tbl_summary(by = Post_Intervention,\n              label = offer_labels[c(\"Match_Date\", \"Offer_Acceptance\", \"Primary_Refusal_Reason\",\n                                     \"organ_was_transplanted\", \"Potential_HIV_Donor_decline\")],\n              statistic = list(Match_Date ~ \"{min} to {max}\")) %&gt;%\n  add_p() %&gt;%\n  modify_header(label ~ \"**Offer characteristic**\") %&gt;%\n  modify_source_note(hiv_code_note) %&gt;%\n  modify_caption(\"**Pre and post-intervention data**\")",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -588,6 +621,7 @@
     "section": "Declined offers",
     "text": "Declined offers\nThe same summary for declined offers only, showing only the categories present among them.\n\n\nClick to show/hide R Code\n# Offers that were declined\ntable_declined_by_period &lt;- offers_for_tables %&gt;%\n  filter(Offer_Acceptance == \"No\") %&gt;%\n  # Show only the categories present among declined offers, as the original did\n  mutate(across(c(Offer_Acceptance, Primary_Refusal_Reason), droplevels)) %&gt;%\n  select(HIV_Pos_to_Pos, Match_Date, Offer_Acceptance, Primary_Refusal_Reason, Post_Intervention,\n         organ_was_transplanted, Potential_HIV_Donor_decline) %&gt;%\n  tbl_summary(by = Post_Intervention,\n              label = offer_labels[c(\"HIV_Pos_to_Pos\", \"Match_Date\", \"Offer_Acceptance\",\n                                     \"Primary_Refusal_Reason\", \"organ_was_transplanted\",\n                                     \"Potential_HIV_Donor_decline\")],\n              statistic = list(Match_Date ~ \"{min} to {max}\")) %&gt;%\n  add_p() %&gt;%\n  modify_header(label ~ \"**Offer characteristic**\") %&gt;%\n  modify_source_note(hiv_code_note) %&gt;%\n  modify_caption(\"**Pre and post-intervention data**\")",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -599,6 +633,7 @@
     "section": "Declined organs transplanted elsewhere",
     "text": "Declined organs transplanted elsewhere\nAmong declined offers, whether the donor’s organ was transplanted, by period and by whether the decline was potentially HIV-related.\n\n\nClick to show/hide R Code\n# Among declined offers: was the donor's organ transplanted, by period and by\n# whether the decline was potentially HIV-related\ntable_declined_transplanted &lt;- offers_for_tables %&gt;%\n  filter(Offer_Acceptance == \"No\") %&gt;%\n  mutate(Potential_HIV_Donor_decline = relabel_levels(\n    Potential_HIV_Donor_decline,\n    c(\"FALSE\" = \"Other reason\", \"TRUE\" = \"Potentially HIV-related\")\n  )) %&gt;%\n  select(Post_Intervention, organ_was_transplanted, Potential_HIV_Donor_decline) %&gt;%\n  tbl_strata(\n    strata = Post_Intervention,\n    .tbl_fun =\n      ~ .x %&gt;%\n        tbl_summary(by = Potential_HIV_Donor_decline,\n                    label = offer_labels[\"organ_was_transplanted\"]) %&gt;%\n        add_n(),\n    .header = \"**{strata}**, N = {n}\"\n  ) %&gt;%\n  modify_caption(\"**Organ acceptance elsewhere in patients whose reason for decline was HIV-related, stratified by intervention period**\")",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -610,6 +645,7 @@
     "section": "Incidence rate ratios",
     "text": "Incidence rate ratios\nThe two models as tables of incidence rate ratios, post- versus pre-intervention.\n\n\nClick to show/hide R Code\n# Incidence rate ratios, post- vs pre-intervention\nmodel_label &lt;- list(Post_Intervention = \"Post-intervention (vs pre-intervention)\")\ntable_model_all_transplants &lt;- m1 %&gt;%\n  tbl_regression(exponentiate = TRUE, label = model_label,\n                 show_single_row = Post_Intervention)\ntable_model_hiv_transplants &lt;- m2 %&gt;%\n  tbl_regression(exponentiate = TRUE, label = model_label,\n                 show_single_row = Post_Intervention)",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -621,6 +657,7 @@
     "section": "Labels for the candidate tables",
     "text": "Labels for the candidate tables\nEnd status in the paper’s column order, categories as the paper prints them, and the paper’s row labels. Cold ischemia time is labelled in hours.\n\n\nClick to show/hide R Code\n# Display copy of the candidate data: end status in the paper's column order,\n# and categories as the paper prints them.\ndemographics_for_tables &lt;- Demographics %&gt;%\n  mutate(\n    EndStatus = factor(EndStatus, levels = c(\"Not transplanted\",\n                                             \"Transplanted from HIV D+ donor\",\n                                             \"Transplanted from HIV D- donor\")),\n    across(c(recipient_race, recipient_ethnicity),\n           \\(x) relabel_levels(x, c(\"Unkown\" = \"Unknown\"))),\n    PRA_2_binary = relabel_levels(PRA_2_binary, c(\"Greather than zero\" = \"Greater than zero\")),\n    dcd_or_dbd = relabel_levels(dcd_or_dbd, c(\"DBD\" = \"Donation after brain death\",\n                                              \"DCD\" = \"Donation after cardiac death\"))\n  )\n\ncandidate_labels &lt;- list(\n  recipient_age_yrs = \"Recipient age (years)\",\n  recipient_sex = \"Recipient sex\",\n  recipient_race = \"Recipient race\",\n  recipient_ethnicity = \"Recipient ethnicity\",\n  recipient_hcv_binary = \"Recipient Hepatitis C serology\",\n  time_on_hd_years = \"Time on dialysis (years)\",\n  PRA_1 = \"Panel Reactive Antibody class I\",\n  PRA_2_binary = \"Panel Reactive Antibody class II\"\n)\n\n# Cold ischemia time is in hours (hours plus minutes divided by 60); the\n# paper's table labels it minutes.\ndonor_labels &lt;- list(\n  warm_ischemia_min = \"Warm ischemia time (min)\",\n  cold_ischemia_total = \"Cold ischemia time (hours)\",\n  donor_sex = \"Donor sex\",\n  donor_race = \"Donor race\",\n  donor_ethnicity = \"Donor ethnicity\",\n  donor_hcv = \"Donor Hepatitis C serology\",\n  donor_age_years = \"Donor age (years)\",\n  dcd_or_dbd = \"Deceased-donor type\",\n  terminal_creatinine = \"Terminal creatinine (mg/dl)\"\n)",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -632,6 +669,7 @@
     "section": "Supplemental Table 1",
     "text": "Supplemental Table 1\nCandidate characteristics by end status: medians (interquartile range) and counts (%), with gtsummary’s default tests.\n\n\nClick to show/hide R Code\n# Paper Supplemental Table 1: medians (IQR) and n (%), by end status\ntable_candidates &lt;- demographics_for_tables %&gt;%\n  select(starts_with(\"recipient\"), time_on_hd_years, PRA_1, PRA_2_binary, EndStatus) %&gt;%\n  select(-recipient_hcv) %&gt;%\n  tbl_summary(by = EndStatus, label = candidate_labels) %&gt;%\n  add_p() %&gt;%\n  bold_labels() %&gt;%\n  add_overall() %&gt;%\n  modify_header(label ~ \"**Characteristic of candidates**\")",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -643,6 +681,7 @@
     "section": "Supplemental Table 2",
     "text": "Supplemental Table 2\nDonor and transplant characteristics among transplanted candidates, by whether the donor had HIV.\n\n\nClick to show/hide R Code\n# Paper Supplemental Table 2: among transplanted candidates, by donor HIV status\ntable_donors &lt;- demographics_for_tables %&gt;%\n  filter(!EndStatus == \"Not transplanted\") %&gt;%\n  mutate(EndStatus = droplevels(EndStatus)) %&gt;%\n  select(warm_ischemia_min, cold_ischemia_total, starts_with(\"donor\"), dcd_or_dbd, terminal_creatinine, EndStatus) %&gt;%\n  select(-donor_age) %&gt;%\n  tbl_summary(by = EndStatus, label = donor_labels) %&gt;%\n  add_p() %&gt;%\n  bold_labels() %&gt;%\n  add_overall() %&gt;%\n  modify_header(label ~ \"**Donor or transplant characteristic**\")",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -654,6 +693,7 @@
     "section": "Not in the paper: means",
     "text": "Not in the paper: means\nThe original code also built Supplemental Tables 1 and 2 with means (SD), one-way ANOVA and t-tests. They were not published; they are kept, labelled, while #4 is open.\n\n\nClick to show/hide R Code\n# Not in the paper: the same two tables with means (SD), one-way ANOVA and\n# t-tests, kept from the original code while issue #4 is open.\ntable_candidates_means &lt;- demographics_for_tables %&gt;%\n  select(starts_with(\"recipient\"), time_on_hd_years, PRA_1, PRA_2_binary, EndStatus) %&gt;%\n  select(-recipient_hcv) %&gt;%\n  tbl_summary(by = EndStatus, label = candidate_labels,\n              statistic = list(all_continuous() ~ \"{mean} ({sd})\"),\n              digits = all_continuous() ~ 1) %&gt;%\n  add_p(test = all_continuous() ~ \"aov\") %&gt;%\n  bold_labels() %&gt;%\n  add_overall() %&gt;%\n  modify_header(label ~ \"**Characteristic of candidates**\")\n\ntable_donors_means &lt;- demographics_for_tables %&gt;%\n  filter(!EndStatus == \"Not transplanted\") %&gt;%\n  mutate(EndStatus = droplevels(EndStatus)) %&gt;%\n  select(warm_ischemia_min, cold_ischemia_total, starts_with(\"donor\"), dcd_or_dbd, terminal_creatinine, EndStatus) %&gt;%\n  select(-donor_age) %&gt;%\n  tbl_summary(by = EndStatus, label = donor_labels,\n              statistic = list(all_continuous() ~ \"{mean} ({sd})\"),\n              digits = all_continuous() ~ 1) %&gt;%\n  add_p(test = all_continuous() ~ \"t.test\") %&gt;%\n  bold_labels() %&gt;%\n  add_overall() %&gt;%\n  modify_header(label ~ \"**Donor or transplant characteristic**\")",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -665,6 +705,7 @@
     "section": "Export",
     "text": "Export\nHTML files in tables/, which stays out of Git until the decider has checked the tables against the paper and cleared them for release.\n\n\nClick to show/hide R Code\n# Saved to tables/, which stays out of Git until the outputs are cleared.\ndir.create(tables_dir, showWarnings = FALSE)\nwrite_csv(offer_counts, file.path(tables_dir, \"offer-counts.csv\"))\nsave_table(table_offers_overall, \"offers-overall\", tables_dir)\nsave_table(table_offers_by_period, \"table-2-offers-by-period\", tables_dir)\nsave_table(table_declined_by_period, \"declined-offers-by-period\", tables_dir)\nsave_table(table_declined_transplanted, \"declined-offers-transplanted-elsewhere\", tables_dir)\nsave_table(table_model_all_transplants, \"model-all-transplants\", tables_dir)\nsave_table(table_model_hiv_transplants, \"model-hiv-transplants\", tables_dir)\nsave_table(table_candidates, \"supplemental-table-1-candidates\", tables_dir)\nsave_table(table_donors, \"supplemental-table-2-donors\", tables_dir)\nsave_table(table_candidates_means, \"not-in-paper-candidates-means\", tables_dir)\nsave_table(table_donors_means, \"not-in-paper-donors-means\", tables_dir)",
     "crumbs": [
+      "Code",
       "Tables and figures",
       "Tables"
     ]
@@ -795,7 +836,7 @@
     "href": "quarto/agents.html#quarto-website",
     "title": "",
     "section": "Quarto website",
-    "text": "Quarto website\nThe site documents the code. It does not run the analysis.\n\n_quarto.yml and index.qmd sit at the root; quarto/ has one page per definitive script, named after it. The custom-callout extension in _extensions/ provides the Rcode callout.\nEach page loads its script with knitr::read_chunk(\"../R/&lt;script&gt;.R\") in a hidden chunk and shows each labelled section with #| eval: false, with prose explaining what the section does and why. Pages link to the script on GitHub and to the scripts it depends on.\nNever evaluate analysis code in the site. Pages render without restricted data.\nThe original R Markdown file is shown on its own page as code only. The page says which lines and header fields were edited for publication and why.\nThe site renders to docs/, which is not committed. .github/workflows/publish.yml renders it on every pull request as a check and, on each push to master, publishes it to the gh-pages branch, which GitHub Pages serves. When you add a script, add its page and sidebar entry in the same pull request; render locally to preview, but do not commit the output.\nProse must match the code. If a change alters what a section does, update its explanation in the same pull request.",
+    "text": "Quarto website\nThe site documents the code. It does not run the analysis.\n\n_quarto.yml, index.qmd and 404.qmd (the page GitHub Pages shows for a missing address) sit at the root; quarto/ has one page per definitive script, named after it. The custom-callout extension in _extensions/ provides the Rcode, Results and Pending callouts, and the issue-comments extension lets readers highlight text and leave a comment, which a relay files as a GitHub issue in this repository.\nVisual cues. Each kind of page has one icon and colour, set by its sidebar entry’s icon: in _quarto.yml and coloured by styles.css; pages mark the same kind of content with the callout of that colour:\n\n\n\n\n\n\n\n\n\nKind\nSidebar icon\nColour\nCallout\n\n\n\n\nBackground\nbook\nblue\n—\n\n\nStudy design and methods (including the differences page)\ndiagram-3\norange\n—\n\n\nR code (including the original R Markdown file)\nlaptop\npink\nRcode (💻)\n\n\nResults\nclipboard-data\ngreen\nResults (📊)\n\n\nProject documents\nfile-earmark-ruled\ngrey\n—\n\n\n\nGive every new page the icon for its kind. styles.css keys colours to icons, not to positions, so adding or moving pages needs no CSS change. A page’s kind is only a label: it does not make anything publishable.\nProvisional content. Text that depends on an open decision is highlighted in yellow. quarto/_pending.lua marks every paragraph that starts with Decision pending:, the plan’s Open: markers on the plan’s page, and any phrase written as [text]{.pending}; a page with a mark gets a yellow ⏳ Pending callout at the top that explains the mark and says how to comment. Each mark links its decision issue. Mark only what an open decision could change, and remove the mark when the decision is settled. Yellow is used for nothing else.\nEach page loads its script with knitr::read_chunk(\"../R/&lt;script&gt;.R\") in a hidden chunk and shows each labelled section with #| eval: false, with prose explaining what the section does and why. Pages link to the script on GitHub and to the scripts it depends on.\nNever evaluate analysis code in the site. Pages render without restricted data.\nThe original R Markdown file is shown on its own page as code only. The page says which lines and header fields were edited for publication and why.\nThe site renders to docs/, which is not committed. .github/workflows/publish.yml renders it on every pull request as a check and, on each push to master, publishes it to the gh-pages branch, which GitHub Pages serves. When you add a script, add its page and sidebar entry in the same pull request; render locally to preview, but do not commit the output.\nProse must match the code. If a change alters what a section does, update its explanation in the same pull request.",
     "crumbs": [
       "Project documents",
       "AGENTS.md"
@@ -863,6 +904,7 @@
     "section": "",
     "text": "Reusable helpers. Each takes its inputs as arguments and reads no global objects, and each is tested on synthetic data with a known answer in tests/test-functions.R.",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Functions"
     ]
@@ -874,6 +916,7 @@
     "section": "Checks",
     "text": "Checks\nSmall checks used by the other scripts: that files exist, that required columns or keys are present, and that a step did not change the number of rows. Each stops with a message naming what is missing, never a data value.\n\n\nClick to show/hide R Code\n# Stop if any of the files is missing, naming them.\ncheck_files_exist &lt;- function(paths) {\n  missing &lt;- paths[!file.exists(paths)]\n  if (length(missing) &gt; 0) {\n    stop(\"Missing file(s): \", paste(missing, collapse = \", \"),\n         \". See README.md, Running the analysis.\", call. = FALSE)\n  }\n  invisible(TRUE)\n}\n\n# Stop if any required name is absent, naming the missing ones and the source.\ncheck_names_present &lt;- function(present, required, source) {\n  missing &lt;- setdiff(required, present)\n  if (length(missing) &gt; 0) {\n    stop(source, \" lacks: \", paste(missing, collapse = \", \"), call. = FALSE)\n  }\n  invisible(TRUE)\n}\n\n# Stop if a step changed the number of rows.\ncheck_rows_unchanged &lt;- function(before, after, step) {\n  if (before != after) {\n    stop(step, \" changed the number of rows (\", before, \" to \", after, \").\",\n         call. = FALSE)\n  }\n  invisible(TRUE)\n}",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Functions"
     ]
@@ -885,6 +928,7 @@
     "section": "Record corrections",
     "text": "Record corrections\nApplies the corrections listed for one data source: each names a record by its identifier and sets one field to a new value. A correction that matches no record, or more than one, stops the run, so a correction can never be applied silently to the wrong record or skipped. The messages name the source and field, not the identifier.\n\n\nClick to show/hide R Code\n# Apply the corrections listed for one source. Each correction names a record\n# by its identifier and sets one field to a new value. A correction that\n# matches no record, or more than one, stops the run, so a correction can\n# never be applied silently to the wrong record or skipped. The messages name\n# the source and field, never the identifier.\napply_record_corrections &lt;- function(data, corrections, source_name, id_column) {\n  corrections &lt;- corrections[corrections$source == source_name, , drop = FALSE]\n  if (nrow(corrections) == 0) {\n    return(data)\n  }\n  if (anyNA(data[[id_column]])) {\n    stop(\"Some records have no \", id_column,\n         \", so corrections cannot be matched reliably.\", call. = FALSE)\n  }\n  ids &lt;- as.character(data[[id_column]])\n  for (i in seq_len(nrow(corrections))) {\n    field &lt;- corrections$field[i]\n    if (!field %in% names(data)) {\n      stop(\"A correction for \", source_name, \" names a field that does not exist: \",\n           field, \".\", call. = FALSE)\n    }\n    rows &lt;- which(ids == corrections$record_id[i])\n    if (length(rows) != 1) {\n      stop(\"A correction to \", field, \" in \", source_name, \" matches \",\n           length(rows), \" records instead of 1.\", call. = FALSE)\n    }\n    data[[field]][rows] &lt;- corrections$corrected_value[i]\n  }\n  data\n}",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Functions"
     ]
@@ -896,6 +940,7 @@
     "section": "Day jitter",
     "text": "Day jitter\nMoves each day offset by its own random whole number of days, from minus to plus the given maximum. A shift that would carry an event across day 0 is applied in the opposite direction instead, so every event stays in its own period, matching how periods are assigned (after day 0 is post-intervention). The same happens to a shift that would move an event from before day 0 onto day 0 itself, where the timeline draws no line. The seed is set only inside the function, so the shifts are the same on every run and nothing else in the session is affected.\n\n\nClick to show/hide R Code\n# Shift each day offset from day 0 by its own random whole number of days, from\n# -max_days to max_days, all equally likely. A shift never moves a value to\n# the other side of day 0 (decided 29 October 2026): values at or before day 0\n# stay at or before it, and values after it stay after it, matching how the\n# periods are assigned (post-intervention means after day 0). A value before\n# day 0 is also never moved onto day 0 itself, where the timeline draws no\n# line. A shift that would cross, or land a value from before day 0 on day 0,\n# is applied in the opposite direction instead. Missing values stay missing.\n# The seed is set only inside this function, so the shifts are the same on\n# every run and nothing else in the session is affected.\njitter_days &lt;- function(x, max_days, seed) {\n  shifts &lt;- withr::with_seed(\n    seed,\n    sample(seq(-max_days, max_days), length(x), replace = TRUE)\n  )\n  shifted &lt;- x + shifts\n  crossed &lt;- !is.na(x) & (((x &lt;= 0) != (shifted &lt;= 0)) | (x &lt; 0 & shifted == 0))\n  shifted[crossed] &lt;- x[crossed] - shifts[crossed]\n  shifted\n}",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Functions"
     ]
@@ -907,6 +952,7 @@
     "section": "Display labels",
     "text": "Display labels\nTurns a column into a factor whose levels keep their default order, with some shown under new names. The tables use it to print categories as the paper does without changing the data.\n\n\nClick to show/hide R Code\n# Turn a column into a factor whose levels keep the order they would have by\n# default (sorted), with some levels shown under new names. `labels` is a\n# named vector: names are the values as they appear in the data, values the\n# names to show. Values not in the data are ignored. Used only for display.\nrelabel_levels &lt;- function(x, labels = character()) {\n  values &lt;- sort(unique(x))\n  shown &lt;- as.character(values)\n  matched &lt;- shown %in% names(labels)\n  shown[matched] &lt;- labels[shown[matched]]\n  factor(x, levels = values, labels = shown)\n}",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Functions"
     ]
@@ -918,6 +964,7 @@
     "section": "Saving tables",
     "text": "Saving tables\nSaves a table as HTML in the given folder.\n\n\nClick to show/hide R Code\n# Save a gtsummary or gt table as HTML in the given folder.\nsave_table &lt;- function(table, name, dir) {\n  dir.create(dir, showWarnings = FALSE, recursive = TRUE)\n  if (inherits(table, \"gtsummary\")) {\n    table &lt;- gtsummary::as_gt(table)\n  }\n  gt::gtsave(table, file.path(dir, paste0(name, \".html\")))\n  invisible(table)\n}",
     "crumbs": [
+      "Code",
       "Setup and helper functions",
       "Functions"
     ]
@@ -949,6 +996,7 @@
     "section": "",
     "text": "Derives the candidate, donor and transplant characteristics compared in Supplemental Tables 1 and 2, as in the original code.",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "4. Candidate characteristics"
     ]
@@ -960,6 +1008,7 @@
     "section": "Column names",
     "text": "Column names\nColumn names in snake case. The spreadsheet repeats the headings sex, race and ethnicity for recipient and donor, which become numbered names; they are renamed here.\n\n\nClick to show/hide R Code\n# Column names in snake case; the spreadsheet's duplicated headings (sex, race\n# and ethnicity of recipient and donor) become numbered names, renamed here.\nDemographics &lt;- Demographics_unprocessed %&gt;%\n  clean_names() %&gt;%\n  rename(recipient_age_yrs = age_yrs) %&gt;%\n  rename(recipient_sex = sex_10) %&gt;%\n  rename(recipient_race = race_11) %&gt;%\n  rename(recipient_ethnicity = ethnicity_12) %&gt;%\n  rename(donor_sex = sex_26) %&gt;%\n  rename(donor_race = race_27) %&gt;%\n  rename(donor_ethnicity = ethnicity_28)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "4. Candidate characteristics"
     ]
@@ -971,6 +1020,7 @@
     "section": "Recipient measures",
     "text": "Recipient measures\nPanel reactive antibody classes I and II, and time on dialysis in years: years plus months divided by 12, with a missing month count taken as 0. strex takes the first and second numbers from text such as “5 years 4 months”.\n\n\nClick to show/hide R Code\n# Panel reactive antibody, and time on dialysis in years (years plus months\n# divided by 12; a missing month count is 0).\nDemographics &lt;- Demographics %&gt;%\n  mutate(PRA_1 = str_first_number(class_i_pra_percent)) %&gt;%\n  mutate(PRA_2 = str_first_number(class_ii_pra_percent)) %&gt;%\n  mutate(years_on_dialysis = str_first_number(time_on_dialysis)) %&gt;%\n  mutate(months_on_dialysis = str_nth_number(time_on_dialysis, n = 2)) %&gt;%\n  mutate(months_on_dialysis = ifelse(is.na(months_on_dialysis), 0, months_on_dialysis)) %&gt;%\n  mutate(time_on_hd_years = years_on_dialysis + (1/12) * (months_on_dialysis))",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "4. Candidate characteristics"
     ]
@@ -982,6 +1032,7 @@
     "section": "Donor and transplant measures",
     "text": "Donor and transplant measures\nDonor age in years, warm ischemia time in minutes, and cold ischemia time in hours (hours plus minutes divided by 60). The paper’s Supplemental Table 2 labels cold ischemia time in minutes; the values are hours.\n\n\nClick to show/hide R Code\n# Donor age in years, warm ischemia in minutes, and cold ischemia in hours\n# (hours plus minutes divided by 60).\nDemographics &lt;- Demographics %&gt;%\n  mutate(donor_age_years = str_first_number(donor_age)) %&gt;%\n  mutate(warm_ischemia_min = str_first_number(warm_ischemia_time)) %&gt;%\n  mutate(cold_ischemia_hours = str_first_number(cold_ischemia_time)) %&gt;%\n  mutate(cold_ischemia_min = str_nth_number(cold_ischemia_time, n = 2)) %&gt;%\n  mutate(cold_ischemia_total = cold_ischemia_hours + (1/60) * cold_ischemia_min)",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "4. Candidate characteristics"
     ]
@@ -993,6 +1044,7 @@
     "section": "End status",
     "text": "End status\nWhether each candidate was transplanted, and from a donor with or without HIV; hepatitis C serology as negative or positive; and panel reactive antibody class II as zero or greater than zero.\n\n\nClick to show/hide R Code\n# End status, hepatitis C serology as negative or positive, and panel reactive\n# antibody class II as zero or greater than zero.\nDemographics &lt;- Demographics %&gt;%\n  mutate(EndStatus = case_when(\n    hiv_transplanted == 1 ~ \"Transplanted from HIV D+ donor\",\n    hiv_transplanted == 0 & transplanted == 1 ~ \"Transplanted from HIV D- donor\",\n    TRUE ~ \"Not transplanted\")) %&gt;%\n  mutate(recipient_hcv_binary = ifelse(str_detect(recipient_hcv, \"Negative\"), \"Negative\", \"Positive\")) %&gt;%\n  mutate(PRA_2_binary = ifelse(PRA_2 == 0, \"Zero\", \"Greather than zero\"))",
     "crumbs": [
+      "Code",
       "Data processing and analysis",
       "4. Candidate characteristics"
     ]
@@ -1002,7 +1054,7 @@
     "href": "quarto/differences.html",
     "title": "Differences from the original code",
     "section": "",
-    "text": "This page lists every way the rebuilt scripts differ from the original R Markdown file of January 2025, which produced the published results (Swaminathan et al. 2025), and every place where the paper’s text differs from that code. Each entry is one of these kinds:",
+    "text": "PendingProvisional\n\n\n\nText highlighted like this is provisional: it depends on a decision the analysis plan has not yet made. To comment on any part of this page, highlight the text and use the 💬 Comment button.\nThis page lists every way the rebuilt scripts differ from the original R Markdown file of January 2025, which produced the published results (Swaminathan et al. 2025), and every place where the paper’s text differs from that code. Each entry is one of these kinds:",
     "crumbs": [
       "Background",
       "Differences from the original code"
@@ -1068,7 +1120,7 @@
     "href": "quarto/differences.html#open-decisions",
     "title": "Differences from the original code",
     "section": "Open decisions",
-    "text": "Open decisions\n\nStandard errors (#3). The published Poisson models treat each candidate-day as independent; the original Stata version clustered by candidate.\nThe unpublished means tables (#4). The original also built Supplemental Tables 1 and 2 with means, ANOVA and t-tests; they are kept, labelled as not in the paper, while the issue is open.\nA small-cell rule (#5) for any output not in the paper. Until it is set, nothing derived from the data is published except numbers that appear in the paper.",
+    "text": "Open decisions\n\nDecision pending: standard errors (#3). The published Poisson models treat each candidate-day as independent; the original Stata version clustered by candidate.\n\n\nDecision pending: the unpublished means tables (#4). The original also built Supplemental Tables 1 and 2 with means, ANOVA and t-tests; they are kept, labelled as not in the paper, while the issue is open.\n\n\nDecision pending: a small-cell rule (#5) for any output not in the paper. Until it is set, nothing derived from the data is published except numbers that appear in the paper.",
     "crumbs": [
       "Background",
       "Differences from the original code"
@@ -1189,7 +1241,7 @@
     "href": "quarto/analysis-plan.html#statistical-analysis",
     "title": "",
     "section": "8. Statistical analysis",
-    "text": "8. Statistical analysis\nAll analyses use R; the version used for each run is recorded with its outputs.\nOffer characteristics (paper Table 2). Counts of distinct candidates and distinct donors with offers. The offer variables of section 7 summarized overall and by period, with tests by period, using gtsummary defaults: n (%) for categorical variables and range for the match date; Wilcoxon rank-sum for the date, and Pearson’s chi-squared or Fisher’s exact test for categorical variables, as gtsummary chooses.\nDeclined offers. The same summary restricted to offers with acceptance No. Among declined offers, the share whose donor organ was transplanted, by period and by whether the decline was potentially HIV-related.\nTransplant rates. Poisson regression of the daily transplant indicator on period, one record per candidate-day, so that the rate is per candidate-day; the incidence rate ratio (post vs pre) with its 95% confidence interval and P value, as reported by gtsummary::tbl_regression(exponentiate = TRUE). Two models: all transplants, and D+/R+ transplants.\nOpen: standard errors that account for repeated days within a candidate (the original Stata code clustered by candidate; the published R models did not), as an addition to the published models (#3).\nCandidate characteristics (paper Supplemental Table 1). Recipient age, sex, race, ethnicity, hepatitis C serology, time on dialysis (years plus months divided by 12), panel reactive antibody class I, and class II as zero or greater than zero, by end status, with an overall column: median (IQR) and n (%), with gtsummary default tests.\nDonor and transplant characteristics (paper Supplemental Table 2). Among transplanted candidates, by donor HIV status: warm ischemia time (minutes), cold ischemia time (hours plus minutes divided by 60), donor sex, race, ethnicity, hepatitis C serology and age, donation after brain or cardiac death, and terminal creatinine; median (IQR) and n (%), with gtsummary default tests.\nOpen: whether the original code’s alternative tables with means (SD), one-way ANOVA and t-tests, which were not published, are kept as unpublished extras or dropped (#4).\nPatient timeline (paper Supplemental Figure 1). For each candidate, follow-up before and after day 0 as line segments, with offers (declined; accepted but not transplanted; accepted and transplanted) and end events (transplant from a D− donor, death, permanent delisting, end of study period) as points, on a time axis of days from day 0. Published only as set out in section 10.\nMissing data. Analyses use the records as they are; no imputation. Each table reports missing values as gtsummary does by default.",
+    "text": "8. Statistical analysis\nAll analyses use R; the version used for each run is recorded with its outputs.\nOffer characteristics (paper Table 2). Counts of distinct candidates and distinct donors with offers. The offer variables of section 7 summarized overall and by period, with tests by period, using gtsummary defaults: n (%) for categorical variables and range for the match date; Wilcoxon rank-sum for the date, and Pearson’s chi-squared or Fisher’s exact test for categorical variables, as gtsummary chooses.\nDeclined offers. The same summary restricted to offers with acceptance No. Among declined offers, the share whose donor organ was transplanted, by period and by whether the decline was potentially HIV-related.\nTransplant rates. Poisson regression of the daily transplant indicator on period, one record per candidate-day, so that the rate is per candidate-day; the incidence rate ratio (post vs pre) with its 95% confidence interval and P value, as reported by gtsummary::tbl_regression(exponentiate = TRUE). Two models: all transplants, and D+/R+ transplants.\n\nOpen: standard errors that account for repeated days within a candidate (the original Stata code clustered by candidate; the published R models did not), as an addition to the published models (#3).\n\nCandidate characteristics (paper Supplemental Table 1). Recipient age, sex, race, ethnicity, hepatitis C serology, time on dialysis (years plus months divided by 12), panel reactive antibody class I, and class II as zero or greater than zero, by end status, with an overall column: median (IQR) and n (%), with gtsummary default tests.\nDonor and transplant characteristics (paper Supplemental Table 2). Among transplanted candidates, by donor HIV status: warm ischemia time (minutes), cold ischemia time (hours plus minutes divided by 60), donor sex, race, ethnicity, hepatitis C serology and age, donation after brain or cardiac death, and terminal creatinine; median (IQR) and n (%), with gtsummary default tests.\n\nOpen: whether the original code’s alternative tables with means (SD), one-way ANOVA and t-tests, which were not published, are kept as unpublished extras or dropped (#4).\n\nPatient timeline (paper Supplemental Figure 1). For each candidate, follow-up before and after day 0 as line segments, with offers (declined; accepted but not transplanted; accepted and transplanted) and end events (transplant from a D− donor, death, permanent delisting, end of study period) as points, on a time axis of days from day 0. Published only as set out in section 10.\nMissing data. Analyses use the records as they are; no imputation. Each table reports missing values as gtsummary does by default.",
     "crumbs": [
       "Project documents",
       "Analysis plan"
@@ -1211,7 +1263,7 @@
     "href": "quarto/analysis-plan.html#disclosure-control",
     "title": "",
     "section": "10. Disclosure control",
-    "text": "10. Disclosure control\nThe data are covered by the IRB-approved study protocol. In addition, for patient privacy (decided 29 October 2026):\n\nRestricted values. The intervention date, any person-level date, record identifiers, and the timeline’s random seed are never in the repository. With exact day offsets, the intervention date would give each candidate’s event dates. The code reads them from the restricted folder, and this plan and the website describe each in words.\nPatient timeline. The published Supplemental Figure 1 is a static image, from which event times can be read to within about two days. Nothing published here is more precise than what is already public: the timeline may be shown interactively only with each event moved by its own random shift of up to ±2 days, from a seed kept with the restricted values, since a public seed would let the shifts be regenerated and removed.\nSmall cells. Until the decider sets a small-cell rule, nothing derived from the data is published except numbers that appear in the paper.\n\nOpen: a small-cell rule for any output not in the paper (#5).",
+    "text": "10. Disclosure control\nThe data are covered by the IRB-approved study protocol. In addition, for patient privacy (decided 29 October 2026):\n\nRestricted values. The intervention date, any person-level date, record identifiers, and the timeline’s random seed are never in the repository. With exact day offsets, the intervention date would give each candidate’s event dates. The code reads them from the restricted folder, and this plan and the website describe each in words.\nPatient timeline. The published Supplemental Figure 1 is a static image, from which event times can be read to within about two days. Nothing published here is more precise than what is already public: the timeline may be shown interactively only with each event moved by its own random shift of up to ±2 days, from a seed kept with the restricted values, since a public seed would let the shifts be regenerated and removed.\nSmall cells. Until the decider sets a small-cell rule, nothing derived from the data is published except numbers that appear in the paper.\n\n\nOpen: a small-cell rule for any output not in the paper (#5).",
     "crumbs": [
       "Project documents",
       "Analysis plan"
