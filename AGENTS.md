@@ -78,7 +78,19 @@ Label analysis variables with human-readable descriptions using `labelled::set_v
 
 The site documents the code. It does not run the analysis.
 
-- `_quarto.yml` and `index.qmd` sit at the root; `quarto/` has one page per definitive script, named after it. The `custom-callout` extension in `_extensions/` provides the `Rcode` callout.
+- `_quarto.yml`, `index.qmd` and `404.qmd` (the page GitHub Pages shows for a missing address) sit at the root; `quarto/` has one page per definitive script, named after it. The `custom-callout` extension in `_extensions/` provides the `Rcode`, `Results` and `Pending` callouts, and the `issue-comments` extension lets readers highlight text and leave a comment, which a relay files as a GitHub issue in this repository.
+- **Visual cues.** Each kind of page has one icon and colour, set by its sidebar entry's `icon:` in `_quarto.yml` and coloured by `styles.css`; pages mark the same kind of content with the callout of that colour:
+
+  | Kind | Sidebar icon | Colour | Callout |
+  |---|---|---|---|
+  | Background | `book` | blue | — |
+  | Study design and methods (including the differences page) | `diagram-3` | orange | — |
+  | R code (including the original R Markdown file) | `laptop` | pink | `Rcode` (💻) |
+  | Results | `clipboard-data` | green | `Results` (📊) |
+  | Project documents | `file-earmark-ruled` | grey | — |
+
+  Give every new page the icon for its kind. `styles.css` keys colours to icons, not to positions, so adding or moving pages needs no CSS change. A page's kind is only a label: it does not make anything publishable.
+- **Provisional content.** Text that depends on an open decision is highlighted in yellow. `quarto/_pending.lua` marks every paragraph that starts with **Decision pending:**, the plan's **Open:** markers on the plan's page, and any phrase written as `[text]{.pending}`; a page with a mark gets a yellow ⏳ `Pending` callout at the top that explains the mark and says how to comment. Each mark links its decision issue. Mark only what an open decision could change, and remove the mark when the decision is settled. Yellow is used for nothing else.
 - Each page loads its script with `knitr::read_chunk("../R/<script>.R")` in a hidden chunk and shows each labelled section with `#| eval: false`, with prose explaining what the section does and why. Pages link to the script on GitHub and to the scripts it depends on.
 - **Never evaluate analysis code in the site.** Pages render without restricted data.
 - The original R Markdown file is shown on its own page as code only. The page says which lines and header fields were edited for publication and why.

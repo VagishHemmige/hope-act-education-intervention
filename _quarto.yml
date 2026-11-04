@@ -1,8 +1,12 @@
 project:
   type: website
   output-dir: docs
+  # Only the site's pages. Without this list Quarto also renders the root
+  # .md files (analysis-plan.md, ARCHITECTURE.md, ...) as pages outside the
+  # sidebar; they are shown through the Project documents pages instead.
   render:
     - index.qmd
+    - 404.qmd
     - quarto/**
 
 author:
@@ -20,74 +24,126 @@ website:
   repo-actions: [edit, issue]
   page-navigation: true
 
+  # Each kind of page has one icon, coloured in styles.css: book =
+  # background, diagram-3 = study design and methods, laptop = R code,
+  # clipboard-data = results, file-earmark-ruled = project documents.
   sidebar:
     style: docked
+    # Every section starts open, including those inside Code
+    collapse-level: 3
     search: true
     contents:
       - href: index.qmd
         text: Home
+        icon: house
 
       - section: Background
         contents:
           - href: quarto/background.qmd
             text: Clinical background
+            icon: book
           - href: quarto/original.qmd
             text: The original R Markdown file
+            icon: laptop
           - href: quarto/differences.qmd
             text: Differences from the original code
+            icon: diagram-3
 
-      - section: Setup and helper functions
+      - section: Code
         contents:
-          - href: quarto/setup.qmd
-            text: Setup
-          - href: quarto/functions.qmd
-            text: Functions
+          - section: Setup and helper functions
+            contents:
+              - href: quarto/setup.qmd
+                text: Setup
+                icon: laptop
+              - href: quarto/functions.qmd
+                text: Functions
+                icon: laptop
 
-      - section: Data processing and analysis
-        contents:
-          - href: quarto/load_data.qmd
-            text: 1. Loading the data
-          - href: quarto/process_person_days.qmd
-            text: 2. Person-days
-          - href: quarto/process_offers.qmd
-            text: 3. Organ offers
-          - href: quarto/process_demographics.qmd
-            text: 4. Candidate characteristics
-          - href: quarto/models.qmd
-            text: 5. Models
+          - section: Data processing and analysis
+            contents:
+              - href: quarto/load_data.qmd
+                text: 1. Loading the data
+                icon: laptop
+              - href: quarto/process_person_days.qmd
+                text: 2. Person-days
+                icon: laptop
+              - href: quarto/process_offers.qmd
+                text: 3. Organ offers
+                icon: laptop
+              - href: quarto/process_demographics.qmd
+                text: 4. Candidate characteristics
+                icon: laptop
+              - href: quarto/models.qmd
+                text: 5. Models
+                icon: laptop
 
-      - section: Tables and figures
-        contents:
-          - href: quarto/tables.qmd
-            text: Tables
-          - href: quarto/figures.qmd
-            text: Figures
+          - section: Tables and figures
+            contents:
+              - href: quarto/tables.qmd
+                text: Tables
+                icon: laptop
+              - href: quarto/figures.qmd
+                text: Figures
+                icon: laptop
 
       - href: quarto/results.qmd
         text: Published results
+        icon: clipboard-data
 
       - section: Project documents
         contents:
           - href: quarto/analysis-plan.qmd
             text: Analysis plan
+            icon: file-earmark-ruled
           - href: quarto/architecture.qmd
             text: Architecture
+            icon: file-earmark-ruled
           - href: quarto/agents.qmd
             text: AGENTS.md
+            icon: file-earmark-ruled
           - href: quarto/repository-blueprint.qmd
             text: Repository blueprint
+            icon: file-earmark-ruled
 
       - href: quarto/about.qmd
         text: About
+        icon: info-circle
 
+# Each kind of content has one callout, in its kind's colour: Rcode for code,
+# Results for results, Pending for provisional content (added by
+# quarto/_pending.lua). Yellow is used for nothing else.
 custom-callout:
   Rcode:
     icon: true
     icon-symbol: "💻"
-    color: pink
+    color: "#d63384"
+  Results:
+    icon: true
+    icon-symbol: "📊"
+    color: "#198754"
+  Pending:
+    icon: true
+    icon-symbol: "⏳"
+    color: "#f0c400"
 
 filters:
+  # Yellow marks for provisional content, and their Pending callout
+  # (AGENTS.md, "Quarto website"). It runs before custom-callout, which
+  # turns the callout it adds into a styled box.
+  - quarto/_pending.lua
   - custom-callout
+  - issue-comments
+
+# Readers can highlight text and comment; the relay files each comment as a
+# GitHub issue in this repository, worked out from the page's address. Same
+# relay as the other project sites. Needs the relay's GitHub App to have
+# access to this repository.
+issue-comments:
+  endpoint: https://script.google.com/macros/s/AKfycbyE8fNBvy3vfuAnuQqdjpCTR8i2zYI-KSvGzhkGlQRYevI1I6auqq9H-mIk2yrXCaIROA/exec
+  contact: mailto:vagish.hemmige@gmail.com
+  # Readers enter a shared passcode before posting, as on the other sites
+  passcode: true
 
 format:
   html:
