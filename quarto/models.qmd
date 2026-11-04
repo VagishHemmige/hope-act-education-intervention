@@ -26,7 +26,7 @@ knitr::read_chunk("../R/models.R")
 
 ## Poisson models
 
-One row per candidate-day, so the rate is per candidate-day and the exponentiated coefficient is the incidence rate ratio, post- versus pre-intervention. One model counts all transplants and the other only transplants from donors with HIV. As published, the models do not account for repeated days within a candidate; standard errors that do are an open decision ([#3](https://github.com/VagishHemmige/hope-act-education-intervention/issues/3)).
+One row per candidate-day, so the rate is per candidate-day and the exponentiated coefficient is the incidence rate ratio, post- versus pre-intervention. One model counts all transplants and the other only transplants from donors with HIV. As published, the models do not account for repeated days within a candidate; [standard errors that do are an open decision ([#3](https://github.com/VagishHemmige/hope-act-education-intervention/issues/3))]{.pending}.
 
 ```{r}
 #| label: fit-poisson-models

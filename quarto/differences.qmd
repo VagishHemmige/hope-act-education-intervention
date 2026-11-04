@@ -11,7 +11,7 @@ This page lists every way the rebuilt scripts differ from the [original R Markdo
 -   **Display only**: how a table or figure looks, not what it contains.
 -   **Paper differs from code**: the paper describes something slightly differently from the code that produced its numbers. The rebuilt code follows the code, and the entry records the paper's wording.
 -   **Kept as in the original**: a choice the rebuilt code keeps, to reproduce the published numbers, although another would be better.
--   **Open decision**: a choice for the decider, Vagish Hemmige, tracked in a GitHub issue.
+-   **Decision pending**: a choice for the decider, Vagish Hemmige, tracked in a GitHub issue and highlighted in yellow until it is settled.
 
 ::: callout-note
 ## Status
@@ -104,9 +104,11 @@ organ_offers_processed <- apply_record_corrections(
 
 ## Open decisions
 
--   **Standard errors** ([#3](https://github.com/VagishHemmige/hope-act-education-intervention/issues/3)). The published Poisson models treat each candidate-day as independent; the original Stata version clustered by candidate.
--   **The unpublished means tables** ([#4](https://github.com/VagishHemmige/hope-act-education-intervention/issues/4)). The original also built Supplemental Tables 1 and 2 with means, ANOVA and t-tests; they are kept, labelled as not in the paper, while the issue is open.
--   **A small-cell rule** ([#5](https://github.com/VagishHemmige/hope-act-education-intervention/issues/5)) for any output not in the paper. Until it is set, nothing derived from the data is published except numbers that appear in the paper.
+**Decision pending:** standard errors ([#3](https://github.com/VagishHemmige/hope-act-education-intervention/issues/3)). The published Poisson models treat each candidate-day as independent; the original Stata version clustered by candidate.
+
+**Decision pending:** the unpublished means tables ([#4](https://github.com/VagishHemmige/hope-act-education-intervention/issues/4)). The original also built Supplemental Tables 1 and 2 with means, ANOVA and t-tests; they are kept, labelled as not in the paper, while the issue is open.
+
+**Decision pending:** a small-cell rule ([#5](https://github.com/VagishHemmige/hope-act-education-intervention/issues/5)) for any output not in the paper. Until it is set, nothing derived from the data is published except numbers that appear in the paper.
 
 ## References
 
