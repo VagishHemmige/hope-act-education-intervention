@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this material, please cite the published article."
+title: "A multispecialty educational intervention to improve acceptance of organs from donors with HIV: analysis code"
+type: software
+authors:
+  - family-names: Hemmige
+    given-names: Vagish
+    orcid: "https://orcid.org/0009-0006-6346-1826"
+license: MIT
+repository-code: "https://github.com/VagishHemmige/hope-act-education-intervention"
+url: "https://vagishhemmige.github.io/hope-act-education-intervention/"
+preferred-citation:
+  type: article
+  title: "Proof of Concept that Implementation of a Multispecialty Educational Intervention May Improve Acceptance of Organs from Donors with HIV at a Tertiary Care Hospital: A Single-Center Study"
+  authors:
+    - family-names: "Swaminathan"
+      given-names: "Neeraja"
+    - family-names: "Puius"
+      given-names: "Yoram A."
+    - family-names: "Czeresnia"
+      given-names: "Jonathan"
+    - family-names: "Muggia"
+      given-names: "Victoria A."
+    - family-names: "Azzi"
+      given-names: "Yorg"
+    - family-names: "Raees"
+      given-names: "Harith"
+    - family-names: "Akalin"
+      given-names: "Enver"
+    - family-names: "Hemmige"
+      given-names: "Vagish"
+      orcid: "https://orcid.org/0009-0006-6346-1826"
+  journal: "Transplant Infectious Disease"
+  year: 2025
+  start: "e70039"
+  doi: "10.1111/tid.70039"
