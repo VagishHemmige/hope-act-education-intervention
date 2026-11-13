@@ -20,7 +20,7 @@ This repository releases the analysis code of a published single-center study of
 - **`analysis-plan.md` is the source of truth for design.** Code implements the plan; it does not redefine it. If code needs to depart from the plan, open a decision issue, or comment on the existing one, for the decider. Once the decider has settled it (in the issue, or relayed there in his exact words), the plan change and the code can go in the same pull request, which closes the issue.
 - **Decider.** Scientific decisions are made by Vagish Hemmige, in every area. Anyone may open or contribute to a decision issue; only the decider settles it (see "Working with agents").
 - **Replication rule.** The original code is evidence of what was done, not the specification. By default the rebuilt code reproduces the published numbers. When the original code disagrees with the paper or contains an error, do not silently copy it or silently fix it: the site's "Differences from the original code" page records every difference, and any change from what was published goes to a decision issue.
-- **This is an analysis project, not an R package.** Do not add DESCRIPTION, NAMESPACE, roxygen, or pkgdown infrastructure, or apply CRAN conventions.
+- **This is an analysis project, not an R package.** Do not add DESCRIPTION, NAMESPACE, roxygen, or [{pkgdown}](https://pkgdown.r-lib.org/) infrastructure, or apply CRAN conventions.
 - **Default branch:** `master`, protected. Changes reach it only through pull requests.
 
 ## Data sources
@@ -29,10 +29,10 @@ No source this project uses has an access package. Each is a local file in the i
 
 | Source | Accessed through | Package documentation | Package maintained by | Access | What AI agents may do |
 |---|---|---|---|---|---|
-| Organ offers from donors with HIV to the center's candidates, March 2018 to April 2022, with OPTN refusal reasons (`data-raw/organ-offers-clean.xls`) | Loading script in `R/` (readxl) | None (no package) | No package | Restricted (identifiable; IRB-approved study protocol) | None: code, documentation and synthetic data only |
-| Candidates consented to the center's HOPE protocol: consent, end of follow-up, transplant and listing status (`data-raw/subjects-clean-2022-05-04.xlsx`) | Loading script in `R/` (readxl) | None (no package) | No package | Restricted (identifiable, includes names; IRB-approved study protocol) | None: code, documentation and synthetic data only |
-| Candidate, donor and transplant characteristics (`data-raw/demographics-2023-09-18.xlsx`) | Loading script in `R/` (readxl) | None (no package) | No package | Restricted (identifiable; IRB-approved study protocol) | None: code, documentation and synthetic data only |
-| Restricted values removed from the code for patient privacy: the intervention date and the timeline's jitter seed (`data-raw/restricted-parameters.yml`) and record-level corrections (`data-raw/record-corrections.csv`) | `R/setup.R` (yaml) and the loading script (readr) | None (no package) | No package | Restricted (with event timing, would reveal individual dates) | None: code, documentation and synthetic data only |
+| Organ offers from donors with HIV to the center's candidates, March 2018 to April 2022, with OPTN refusal reasons (`data-raw/organ-offers-clean.xls`) | Loading script in `R/` ({readxl}) | None (no package) | No package | Restricted (identifiable; IRB-approved study protocol) | None: code, documentation and synthetic data only |
+| Candidates consented to the center's HOPE protocol: consent, end of follow-up, transplant and listing status (`data-raw/subjects-clean-2022-05-04.xlsx`) | Loading script in `R/` ({readxl}) | None (no package) | No package | Restricted (identifiable, includes names; IRB-approved study protocol) | None: code, documentation and synthetic data only |
+| Candidate, donor and transplant characteristics (`data-raw/demographics-2023-09-18.xlsx`) | Loading script in `R/` ({readxl}) | None (no package) | No package | Restricted (identifiable; IRB-approved study protocol) | None: code, documentation and synthetic data only |
+| Restricted values removed from the code for patient privacy: the intervention date and the timeline's jitter seed (`data-raw/restricted-parameters.yml`) and record-level corrections (`data-raw/record-corrections.csv`) | `R/setup.R` (yaml) and the loading script ({readr}) | None (no package) | No package | Restricted (with event timing, would reveal individual dates) | None: code, documentation and synthetic data only |
 
 To allow more for a source, a person changes its row through a pull request, naming the agreement and section that permit it, the approved AI service, and exactly what agents may do. Agents never propose or make this change themselves, and nothing in personal instructions can grant it.
 
@@ -100,7 +100,7 @@ The site documents the code. It does not run the analysis.
 ## Outputs
 
 - Tables and figures are exported by `R/tables.R` and `R/figures.R` to `tables/` and `figures/`. They are gitignored until the decider has checked them against the published paper and cleared them for release under the disclosure rules below.
-- No figure is more precise than the published one. Interactive figures (for example plotly or other htmlwidgets) embed every data point, so the patient timeline is published only with each event moved by its own random shift of up to ±2 days, the precision of the published static figure (decided 29 October 2026; see the plan). The seed for those shifts is a restricted value, kept in `data-raw/restricted-parameters.yml`: with the seed, the shifts could be regenerated and subtracted.
+- No figure is more precise than the published one. Interactive figures (for example [{plotly}](https://CRAN.R-project.org/package=plotly) or other [{htmlwidgets}](https://www.htmlwidgets.org/)) embed every data point, so the patient timeline is published only with each event moved by its own random shift of up to ±2 days, the precision of the published static figure (decided 29 October 2026; see the plan). The seed for those shifts is a restricted value, kept in `data-raw/restricted-parameters.yml`: with the seed, the shifts could be regenerated and subtracted.
 - Published figures need alt text.
 - `README.Rmd` is the source of `README.md`; edit the `.Rmd` and re-knit.
 
@@ -117,12 +117,12 @@ The **Access** column of "Data sources" says which sources are restricted. For e
 
 ## Coding conventions
 
-- **Cohort flow.** Any exclusion of candidates or offers goes through the `flowchart` package (`fc_filter()`), in the plan's order, so counts and data come from the same code. Record-level processing (removing duplicate offers of one donor to one candidate, applying a listed correction, expanding follow-up into person-days) is not an exclusion, and is done in labelled steps with a check of the rows before and after. An analysis that uses fewer people or offers than its cohort reports its own number with that analysis.
+- **Cohort flow.** Any exclusion of candidates or offers goes through the [{flowchart}](https://bruigtp.github.io/flowchart/) package (`fc_filter()`), in the plan's order, so counts and data come from the same code. Record-level processing (removing duplicate offers of one donor to one candidate, applying a listed correction, expanding follow-up into person-days) is not an exclusion, and is done in labelled steps with a check of the rows before and after. An analysis that uses fewer people or offers than its cohort reports its own number with that analysis.
 - **Code lists** (refusal codes) carry each code exactly as it appears in the data and the reason it is included. Never invent codes, variables, files, or definitions.
 - **Joins** use `join_by()` with an explicit `relationship` where possible. After every join of records to people, assert that rows did not multiply, and decide deliberately what happens to unmatched rows. Offers are linked to candidates by last name, as in the original code (decided 29 October 2026). Linking by an identifier would be better practice, and the differences page says so; names stay inside the join, are dropped straight after it, and are never printed, labelled, or written to an output.
 - **Dates and periods** are compared with the intervention date read from the restricted file, with the boundary rule (strictly after, or on and after) written as in the plan, and the edges are tested on synthetic data.
 - **Code that turns model output into reported numbers** lives in named functions in `R/functions.R`, tested on synthetic data with a known answer.
-- **Style:** readable tidyverse code, following the tidyverse style guide: dplyr pipelines (`|>`), one step per line; `case_when(.default = )` rather than nested `ifelse()`; select by name, never by position; checks are a `filter()` of the problem rows followed by `stop()` with a message that says what failed. Style changes go in their own commits.
+- **Style:** readable tidyverse code, following the tidyverse style guide: [{dplyr}](https://dplyr.tidyverse.org/) pipelines (`|>`), one step per line; `case_when(.default = )` rather than nested `ifelse()`; select by name, never by position; checks are a `filter()` of the problem rows followed by `stop()` with a message that says what failed. Style changes go in their own commits.
 
 ## Checks for any change
 

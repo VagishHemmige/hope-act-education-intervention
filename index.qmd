@@ -11,6 +11,8 @@ The HOPE Act made it legal in the United States to transplant organs from donors
 
 The original analysis was a single R Markdown file (shown [here](quarto/original.qmd)). This repository rebuilds it as scripts that `R/main.R` runs in order, and this site explains each script step by step. The rebuilt code is written to reproduce the published numbers; every place where it differs from the original code, or where the paper differs from the code, is listed on the [differences page](quarto/differences.qmd).
 
+[Braces](https://forum.posit.co/t/curly-braces-around-package-name-convention/122547) identify R packages throughout this site.
+
 ::: callout-note
 ## Patient privacy
 The code is published without the values that could identify patients. The intervention date (day 0 for both study periods), one record-level correction and the random seed used by the patient timeline are kept with the restricted study data, not in the code. With the exact intervention date, the day offsets in the analysis would give each patient's event dates. The correction recodes one accepted offer as a provisional acceptance, because the recipient became ineligible before transplant. The patient timeline moves each event by up to two days, so it is no more precise than the published figure.
