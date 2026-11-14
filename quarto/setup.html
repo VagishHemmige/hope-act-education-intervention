@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9c6fd4a99ff4209dd1149a1765198857.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.js"></script>
 <link href="../site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -114,17 +114,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 <style>
-div.callout-Results.callout {
-  border-left-color: #198754;
-}
-div.callout-Results.callout-style-default > .callout-header {
-  background-color: rgba(25, 135, 84, 0.13);
-}
-div.callout-Results .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-Results.callout-style-default .callout-icon::before, div.callout-Results.callout-titled .callout-icon::before {
-  content: '📊';
-  background-image: none;
-}
 div.callout-Pending.callout {
   border-left-color: #f0c400;
 }
@@ -134,6 +123,17 @@ div.callout-Pending.callout-style-default > .callout-header {
 div.callout-Pending .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
 div.callout-Pending.callout-style-default .callout-icon::before, div.callout-Pending.callout-titled .callout-icon::before {
   content: '⏳';
+  background-image: none;
+}
+div.callout-Results.callout {
+  border-left-color: #198754;
+}
+div.callout-Results.callout-style-default > .callout-header {
+  background-color: rgba(25, 135, 84, 0.13);
+}
+div.callout-Results .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-Results.callout-style-default .callout-icon::before, div.callout-Results.callout-titled .callout-icon::before {
+  content: '📊';
   background-image: none;
 }
 div.callout-Rcode.callout {
@@ -464,7 +464,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 </div>
 <section id="packages" class="level2">
 <h2 class="anchored" data-anchor-id="packages">Packages</h2>
-<p>The tidyverse and <code>lubridate</code> handle the data and dates, <code>readxl</code> reads the spreadsheets, <code>gtsummary</code> and <code>gt</code> build the tables, <code>janitor</code> and <code>strex</code> tidy the demographics spreadsheet, <code>plotly</code> makes the interactive timeline, and <code>yaml</code> reads the restricted parameters. <code>lubridate</code> must stay attached: base R compares a date-time with a date incorrectly, and the period assignment relies on <code>lubridate</code> getting it right.</p>
+<p>The <a href="https://www.tidyverse.org/">{tidyverse}</a> and <a href="https://lubridate.tidyverse.org/">{lubridate}</a> handle the data and dates, <a href="https://readxl.tidyverse.org/">{readxl}</a> reads the spreadsheets, <a href="https://www.danieldsjoberg.com/gtsummary/">{gtsummary}</a> and <a href="https://gt.rstudio.com/">{gt}</a> build the tables, <a href="https://sfirke.github.io/janitor/">{janitor}</a> and <a href="https://CRAN.R-project.org/package=strex">{strex}</a> tidy the demographics spreadsheet, <a href="https://CRAN.R-project.org/package=plotly">{plotly}</a> makes the interactive timeline, and <a href="https://CRAN.R-project.org/package=yaml">{yaml}</a> reads the restricted parameters. {lubridate} must stay attached: base R compares a date-time with a date incorrectly, and the period assignment relies on {lubridate} getting it right.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to show/hide R Code</summary>
@@ -482,7 +482,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 </section>
 <section id="package-versions" class="level2">
 <h2 class="anchored" data-anchor-id="package-versions">Package versions</h2>
-<p><code>ggplotly()</code> in plotly versions before 4.11.0 fails with ggplot2 4.0 or later, with an error far from its cause. The run stops at the start instead, saying which version to install.</p>
+<p><code>ggplotly()</code> in {plotly} versions before 4.11.0 fails with <a href="https://ggplot2.tidyverse.org/">{ggplot2}</a> 4.0 or later, with an error far from its cause. The run stops at the start instead, saying which version to install.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to show/hide R Code</summary>
@@ -1076,7 +1076,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Packages</span></span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>The tidyverse and <span class="in">`lubridate`</span> handle the data and dates, <span class="in">`readxl`</span> reads the spreadsheets, <span class="in">`gtsummary`</span> and <span class="in">`gt`</span> build the tables, <span class="in">`janitor`</span> and <span class="in">`strex`</span> tidy the demographics spreadsheet, <span class="in">`plotly`</span> makes the interactive timeline, and <span class="in">`yaml`</span> reads the restricted parameters. <span class="in">`lubridate`</span> must stay attached: base R compares a date-time with a date incorrectly, and the period assignment relies on <span class="in">`lubridate`</span> getting it right.</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>The <span class="co">[</span><span class="ot">{tidyverse}</span><span class="co">](https://www.tidyverse.org/)</span> and <span class="co">[</span><span class="ot">{lubridate}</span><span class="co">](https://lubridate.tidyverse.org/)</span> handle the data and dates, <span class="co">[</span><span class="ot">{readxl}</span><span class="co">](https://readxl.tidyverse.org/)</span> reads the spreadsheets, <span class="co">[</span><span class="ot">{gtsummary}</span><span class="co">](https://www.danieldsjoberg.com/gtsummary/)</span> and <span class="co">[</span><span class="ot">{gt}</span><span class="co">](https://gt.rstudio.com/)</span> build the tables, <span class="co">[</span><span class="ot">{janitor}</span><span class="co">](https://sfirke.github.io/janitor/)</span> and <span class="co">[</span><span class="ot">{strex}</span><span class="co">](https://CRAN.R-project.org/package=strex)</span> tidy the demographics spreadsheet, <span class="co">[</span><span class="ot">{plotly}</span><span class="co">](https://CRAN.R-project.org/package=plotly)</span> makes the interactive timeline, and <span class="co">[</span><span class="ot">{yaml}</span><span class="co">](https://CRAN.R-project.org/package=yaml)</span> reads the restricted parameters. {lubridate} must stay attached: base R compares a date-time with a date incorrectly, and the period assignment relies on {lubridate} getting it right.</span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: load-packages</span></span>
@@ -1085,7 +1085,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="fu">## Package versions</span></span>
 <span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="in">`ggplotly()`</span> in plotly versions before 4.11.0 fails with ggplot2 4.0 or later, with an error far from its cause. The run stops at the start instead, saying which version to install.</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="in">`ggplotly()`</span> in {plotly} versions before 4.11.0 fails with <span class="co">[</span><span class="ot">{ggplot2}</span><span class="co">](https://ggplot2.tidyverse.org/)</span> 4.0 or later, with an error far from its cause. The run stops at the start instead, saying which version to install.</span>
 <span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: check-package-versions</span></span>

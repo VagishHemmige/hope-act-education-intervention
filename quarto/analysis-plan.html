@@ -102,7 +102,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9c6fd4a99ff4209dd1149a1765198857.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.js"></script>
 <link href="../site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -144,17 +144,6 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
   content: '💻';
   background-image: none;
 }
-div.callout-Results.callout {
-  border-left-color: #198754;
-}
-div.callout-Results.callout-style-default > .callout-header {
-  background-color: rgba(25, 135, 84, 0.13);
-}
-div.callout-Results .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-Results.callout-style-default .callout-icon::before, div.callout-Results.callout-titled .callout-icon::before {
-  content: '📊';
-  background-image: none;
-}
 div.callout-Pending.callout {
   border-left-color: #f0c400;
 }
@@ -164,6 +153,17 @@ div.callout-Pending.callout-style-default > .callout-header {
 div.callout-Pending .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
 div.callout-Pending.callout-style-default .callout-icon::before, div.callout-Pending.callout-titled .callout-icon::before {
   content: '⏳';
+  background-image: none;
+}
+div.callout-Results.callout {
+  border-left-color: #198754;
+}
+div.callout-Results.callout-style-default > .callout-header {
+  background-color: rgba(25, 135, 84, 0.13);
+}
+div.callout-Results .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-Results.callout-style-default .callout-icon::before, div.callout-Results.callout-titled .callout-icon::before {
+  content: '📊';
   background-image: none;
 }
 </style>
@@ -598,19 +598,19 @@ edit that file, not this page. Its first heading is the page title.
 <section id="statistical-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-analysis">8. Statistical analysis</h2>
 <p>All analyses use R; the version used for each run is recorded with its outputs.</p>
-<p><strong>Offer characteristics (paper Table 2).</strong> Counts of distinct candidates and distinct donors with offers. The offer variables of section 7 summarized overall and by period, with tests by period, using <code>gtsummary</code> defaults: n (%) for categorical variables and range for the match date; Wilcoxon rank-sum for the date, and Pearson’s chi-squared or Fisher’s exact test for categorical variables, as <code>gtsummary</code> chooses.</p>
+<p><strong>Offer characteristics (paper Table 2).</strong> Counts of distinct candidates and distinct donors with offers. The offer variables of section 7 summarized overall and by period, with tests by period, using <a href="https://www.danieldsjoberg.com/gtsummary/">{gtsummary}</a> defaults: n (%) for categorical variables and range for the match date; Wilcoxon rank-sum for the date, and Pearson’s chi-squared or Fisher’s exact test for categorical variables, as {gtsummary} chooses.</p>
 <p><strong>Declined offers.</strong> The same summary restricted to offers with acceptance No.&nbsp;Among declined offers, the share whose donor organ was transplanted, by period and by whether the decline was potentially HIV-related.</p>
 <p><strong>Transplant rates.</strong> Poisson regression of the daily transplant indicator on period, one record per candidate-day, so that the rate is per candidate-day; the incidence rate ratio (post vs pre) with its 95% confidence interval and P value, as reported by <code>gtsummary::tbl_regression(exponentiate = TRUE)</code>. Two models: all transplants, and D+/R+ transplants.</p>
 <div class="pending-note">
 <p><strong>Open:</strong> standard errors that account for repeated days within a candidate (the original Stata code clustered by candidate; the published R models did not), as an addition to the published models (<a href="https://github.com/VagishHemmige/hope-act-education-intervention/issues/3">#3</a>).</p>
 </div>
-<p><strong>Candidate characteristics (paper Supplemental Table 1).</strong> Recipient age, sex, race, ethnicity, hepatitis C serology, time on dialysis (years plus months divided by 12), panel reactive antibody class I, and class II as zero or greater than zero, by end status, with an overall column: median (IQR) and n (%), with <code>gtsummary</code> default tests.</p>
-<p><strong>Donor and transplant characteristics (paper Supplemental Table 2).</strong> Among transplanted candidates, by donor HIV status: warm ischemia time (minutes), cold ischemia time (hours plus minutes divided by 60), donor sex, race, ethnicity, hepatitis C serology and age, donation after brain or cardiac death, and terminal creatinine; median (IQR) and n (%), with <code>gtsummary</code> default tests.</p>
+<p><strong>Candidate characteristics (paper Supplemental Table 1).</strong> Recipient age, sex, race, ethnicity, hepatitis C serology, time on dialysis (years plus months divided by 12), panel reactive antibody class I, and class II as zero or greater than zero, by end status, with an overall column: median (IQR) and n (%), with {gtsummary} default tests.</p>
+<p><strong>Donor and transplant characteristics (paper Supplemental Table 2).</strong> Among transplanted candidates, by donor HIV status: warm ischemia time (minutes), cold ischemia time (hours plus minutes divided by 60), donor sex, race, ethnicity, hepatitis C serology and age, donation after brain or cardiac death, and terminal creatinine; median (IQR) and n (%), with {gtsummary} default tests.</p>
 <div class="pending-note">
 <p><strong>Open:</strong> whether the original code’s alternative tables with means (SD), one-way ANOVA and t-tests, which were not published, are kept as unpublished extras or dropped (<a href="https://github.com/VagishHemmige/hope-act-education-intervention/issues/4">#4</a>).</p>
 </div>
 <p><strong>Patient timeline (paper Supplemental Figure 1).</strong> For each candidate, follow-up before and after day 0 as line segments, with offers (declined; accepted but not transplanted; accepted and transplanted) and end events (transplant from a D− donor, death, permanent delisting, end of study period) as points, on a time axis of days from day 0. Published only as set out in section 10.</p>
-<p><strong>Missing data.</strong> Analyses use the records as they are; no imputation. Each table reports missing values as <code>gtsummary</code> does by default.</p>
+<p><strong>Missing data.</strong> Analyses use the records as they are; no imputation. Each table reports missing values as {gtsummary} does by default.</p>
 </section>
 <section id="sensitivity-analyses" class="level2">
 <h2 class="anchored" data-anchor-id="sensitivity-analyses">9. Sensitivity analyses</h2>

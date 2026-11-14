@@ -101,7 +101,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9c6fd4a99ff4209dd1149a1765198857.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.js"></script>
 <link href="site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -465,6 +465,7 @@ div.callout-Results.callout-style-default .callout-icon::before, div.callout-Res
 <section id="what-this-site-does" class="level2">
 <h2 class="anchored" data-anchor-id="what-this-site-does">What this site does</h2>
 <p>The original analysis was a single R Markdown file (shown <a href="./quarto/original.html">here</a>). This repository rebuilds it as scripts that <code>R/main.R</code> runs in order, and this site explains each script step by step. The rebuilt code is written to reproduce the published numbers; every place where it differs from the original code, or where the paper differs from the code, is listed on the <a href="./quarto/differences.html">differences page</a>.</p>
+<p><a href="https://forum.posit.co/t/curly-braces-around-package-name-convention/122547">Braces</a> identify R packages throughout this site.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -974,23 +975,25 @@ Swaminathan, Neeraja, Yoram A. Puius, Jonathan Czeresnia, et al. 2025. <span>“
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>The original analysis was a single R Markdown file (shown <span class="co">[</span><span class="ot">here</span><span class="co">](quarto/original.qmd)</span>). This repository rebuilds it as scripts that <span class="in">`R/main.R`</span> runs in order, and this site explains each script step by step. The rebuilt code is written to reproduce the published numbers; every place where it differs from the original code, or where the paper differs from the code, is listed on the <span class="co">[</span><span class="ot">differences page</span><span class="co">](quarto/differences.qmd)</span>.</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Patient privacy</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>The code is published without the values that could identify patients. The intervention date (day 0 for both study periods), one record-level correction and the random seed used by the patient timeline are kept with the restricted study data, not in the code. With the exact intervention date, the day offsets in the analysis would give each patient's event dates. The correction recodes one accepted offer as a provisional acceptance, because the recipient became ineligible before transplant. The patient timeline moves each event by up to two days, so it is no more precise than the published figure.</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## Methods</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Braces</span><span class="co">](https://forum.posit.co/t/curly-braces-around-package-name-convention/122547)</span> identify R packages throughout this site.</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Patient privacy</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>The code is published without the values that could identify patients. The intervention date (day 0 for both study periods), one record-level correction and the random seed used by the patient timeline are kept with the restricted study data, not in the code. With the exact intervention date, the day offsets in the analysis would give each patient's event dates. The correction recodes one accepted offer as a provisional acceptance, because the recipient became ineligible before transplant. The patient timeline moves each event by up to two days, so it is no more precise than the published figure.</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>The authoritative specification is the <span class="co">[</span><span class="ot">analysis plan</span><span class="co">](quarto/analysis-plan.qmd)</span>. In brief: a single-center before-and-after comparison. Offers from donors with HIV to the center's candidates are compared by period, including declines for refusal codes considered potentially HIV-related. Transplant rates are compared with Poisson regression on one record per candidate per day of follow-up. Candidate, donor and transplant characteristics are compared by whether and how candidates were transplanted.</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## Methods</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Status</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>The authoritative specification is the <span class="co">[</span><span class="ot">analysis plan</span><span class="co">](quarto/analysis-plan.qmd)</span>. In brief: a single-center before-and-after comparison. Offers from donors with HIV to the center's candidates are compared by period, including declines for refusal codes considered potentially HIV-related. Transplant rates are compared with Poisson regression on one record per candidate per day of follow-up. Candidate, donor and transplant characteristics are compared by whether and how candidates were transplanted.</span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>The code is complete and tested on synthetic data. Run on the study data by the maintainer, it reproduces the published incidence rate ratios and the published counts checked so far. Open decisions are tracked as <span class="co">[</span><span class="ot">GitHub issues</span><span class="co">](https://github.com/VagishHemmige/hope-act-education-intervention/issues)</span>. The site shows code and methods only; for the results, see the <span class="co">[</span><span class="ot">published article</span><span class="co">](https://doi.org/10.1111/tid.70039)</span>.</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## Status</span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>The code is complete and tested on synthetic data. Run on the study data by the maintainer, it reproduces the published incidence rate ratios and the published counts checked so far. Open decisions are tracked as <span class="co">[</span><span class="ot">GitHub issues</span><span class="co">](https://github.com/VagishHemmige/hope-act-education-intervention/issues)</span>. The site shows code and methods only; for the results, see the <span class="co">[</span><span class="ot">published article</span><span class="co">](https://doi.org/10.1111/tid.70039)</span>.</span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

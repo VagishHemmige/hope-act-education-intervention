@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9c6fd4a99ff4209dd1149a1765198857.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.js"></script>
 <link href="../site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -114,15 +114,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 <style>
-div.callout-Rcode.callout {
-  border-left-color: #d63384;
+div.callout-Pending.callout {
+  border-left-color: #f0c400;
 }
-div.callout-Rcode.callout-style-default > .callout-header {
-  background-color: rgba(214, 51, 132, 0.13);
+div.callout-Pending.callout-style-default > .callout-header {
+  background-color: rgba(240, 196, 0, 0.13);
 }
-div.callout-Rcode .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode.callout-titled .callout-icon::before {
-  content: '💻';
+div.callout-Pending .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-Pending.callout-style-default .callout-icon::before, div.callout-Pending.callout-titled .callout-icon::before {
+  content: '⏳';
   background-image: none;
 }
 div.callout-Results.callout {
@@ -136,15 +136,15 @@ div.callout-Results.callout-style-default .callout-icon::before, div.callout-Res
   content: '📊';
   background-image: none;
 }
-div.callout-Pending.callout {
-  border-left-color: #f0c400;
+div.callout-Rcode.callout {
+  border-left-color: #d63384;
 }
-div.callout-Pending.callout-style-default > .callout-header {
-  background-color: rgba(240, 196, 0, 0.13);
+div.callout-Rcode.callout-style-default > .callout-header {
+  background-color: rgba(214, 51, 132, 0.13);
 }
-div.callout-Pending .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-Pending.callout-style-default .callout-icon::before, div.callout-Pending.callout-titled .callout-icon::before {
-  content: '⏳';
+div.callout-Rcode .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode.callout-titled .callout-icon::before {
+  content: '💻';
   background-image: none;
 }
 </style>
@@ -491,7 +491,7 @@ edit that file, not this page. Its first heading is the page title.
 <li><strong><code>analysis-plan.md</code> is the source of truth for design.</strong> Code implements the plan; it does not redefine it. If code needs to depart from the plan, open a decision issue, or comment on the existing one, for the decider. Once the decider has settled it (in the issue, or relayed there in his exact words), the plan change and the code can go in the same pull request, which closes the issue.</li>
 <li><strong>Decider.</strong> Scientific decisions are made by Vagish Hemmige, in every area. Anyone may open or contribute to a decision issue; only the decider settles it (see “Working with agents”).</li>
 <li><strong>Replication rule.</strong> The original code is evidence of what was done, not the specification. By default the rebuilt code reproduces the published numbers. When the original code disagrees with the paper or contains an error, do not silently copy it or silently fix it: the site’s “Differences from the original code” page records every difference, and any change from what was published goes to a decision issue.</li>
-<li><strong>This is an analysis project, not an R package.</strong> Do not add DESCRIPTION, NAMESPACE, roxygen, or pkgdown infrastructure, or apply CRAN conventions.</li>
+<li><strong>This is an analysis project, not an R package.</strong> Do not add DESCRIPTION, NAMESPACE, roxygen, or <a href="https://pkgdown.r-lib.org/">{pkgdown}</a> infrastructure, or apply CRAN conventions.</li>
 <li><strong>Default branch:</strong> <code>master</code>, protected. Changes reach it only through pull requests.</li>
 </ul>
 </section>
@@ -520,7 +520,7 @@ edit that file, not this page. Its first heading is the page title.
 <tbody>
 <tr class="odd">
 <td>Organ offers from donors with HIV to the center’s candidates, March 2018 to April 2022, with OPTN refusal reasons (<code>data-raw/organ-offers-clean.xls</code>)</td>
-<td>Loading script in <code>R/</code> (readxl)</td>
+<td>Loading script in <code>R/</code> ({readxl})</td>
 <td>None (no package)</td>
 <td>No package</td>
 <td>Restricted (identifiable; IRB-approved study protocol)</td>
@@ -528,7 +528,7 @@ edit that file, not this page. Its first heading is the page title.
 </tr>
 <tr class="even">
 <td>Candidates consented to the center’s HOPE protocol: consent, end of follow-up, transplant and listing status (<code>data-raw/subjects-clean-2022-05-04.xlsx</code>)</td>
-<td>Loading script in <code>R/</code> (readxl)</td>
+<td>Loading script in <code>R/</code> ({readxl})</td>
 <td>None (no package)</td>
 <td>No package</td>
 <td>Restricted (identifiable, includes names; IRB-approved study protocol)</td>
@@ -536,7 +536,7 @@ edit that file, not this page. Its first heading is the page title.
 </tr>
 <tr class="odd">
 <td>Candidate, donor and transplant characteristics (<code>data-raw/demographics-2023-09-18.xlsx</code>)</td>
-<td>Loading script in <code>R/</code> (readxl)</td>
+<td>Loading script in <code>R/</code> ({readxl})</td>
 <td>None (no package)</td>
 <td>No package</td>
 <td>Restricted (identifiable; IRB-approved study protocol)</td>
@@ -544,7 +544,7 @@ edit that file, not this page. Its first heading is the page title.
 </tr>
 <tr class="even">
 <td>Restricted values removed from the code for patient privacy: the intervention date and the timeline’s jitter seed (<code>data-raw/restricted-parameters.yml</code>) and record-level corrections (<code>data-raw/record-corrections.csv</code>)</td>
-<td><code>R/setup.R</code> (yaml) and the loading script (readr)</td>
+<td><code>R/setup.R</code> (yaml) and the loading script ({readr})</td>
 <td>None (no package)</td>
 <td>No package</td>
 <td>Restricted (with event timing, would reveal individual dates)</td>
@@ -658,7 +658,7 @@ edit that file, not this page. Its first heading is the page title.
 <h2 class="anchored" data-anchor-id="outputs">Outputs</h2>
 <ul>
 <li>Tables and figures are exported by <code>R/tables.R</code> and <code>R/figures.R</code> to <code>tables/</code> and <code>figures/</code>. They are gitignored until the decider has checked them against the published paper and cleared them for release under the disclosure rules below.</li>
-<li>No figure is more precise than the published one. Interactive figures (for example plotly or other htmlwidgets) embed every data point, so the patient timeline is published only with each event moved by its own random shift of up to ±2 days, the precision of the published static figure (decided 29 October 2026; see the plan). The seed for those shifts is a restricted value, kept in <code>data-raw/restricted-parameters.yml</code>: with the seed, the shifts could be regenerated and subtracted.</li>
+<li>No figure is more precise than the published one. Interactive figures (for example <a href="https://CRAN.R-project.org/package=plotly">{plotly}</a> or other <a href="https://www.htmlwidgets.org/">{htmlwidgets}</a>) embed every data point, so the patient timeline is published only with each event moved by its own random shift of up to ±2 days, the precision of the published static figure (decided 29 October 2026; see the plan). The seed for those shifts is a restricted value, kept in <code>data-raw/restricted-parameters.yml</code>: with the seed, the shifts could be regenerated and subtracted.</li>
 <li>Published figures need alt text.</li>
 <li><code>README.Rmd</code> is the source of <code>README.md</code>; edit the <code>.Rmd</code> and re-knit.</li>
 </ul>
@@ -678,12 +678,12 @@ edit that file, not this page. Its first heading is the page title.
 <section id="coding-conventions" class="level2">
 <h2 class="anchored" data-anchor-id="coding-conventions">Coding conventions</h2>
 <ul>
-<li><strong>Cohort flow.</strong> Any exclusion of candidates or offers goes through the <code>flowchart</code> package (<code>fc_filter()</code>), in the plan’s order, so counts and data come from the same code. Record-level processing (removing duplicate offers of one donor to one candidate, applying a listed correction, expanding follow-up into person-days) is not an exclusion, and is done in labelled steps with a check of the rows before and after. An analysis that uses fewer people or offers than its cohort reports its own number with that analysis.</li>
+<li><strong>Cohort flow.</strong> Any exclusion of candidates or offers goes through the <a href="https://bruigtp.github.io/flowchart/">{flowchart}</a> package (<code>fc_filter()</code>), in the plan’s order, so counts and data come from the same code. Record-level processing (removing duplicate offers of one donor to one candidate, applying a listed correction, expanding follow-up into person-days) is not an exclusion, and is done in labelled steps with a check of the rows before and after. An analysis that uses fewer people or offers than its cohort reports its own number with that analysis.</li>
 <li><strong>Code lists</strong> (refusal codes) carry each code exactly as it appears in the data and the reason it is included. Never invent codes, variables, files, or definitions.</li>
 <li><strong>Joins</strong> use <code>join_by()</code> with an explicit <code>relationship</code> where possible. After every join of records to people, assert that rows did not multiply, and decide deliberately what happens to unmatched rows. Offers are linked to candidates by last name, as in the original code (decided 29 October 2026). Linking by an identifier would be better practice, and the differences page says so; names stay inside the join, are dropped straight after it, and are never printed, labelled, or written to an output.</li>
 <li><strong>Dates and periods</strong> are compared with the intervention date read from the restricted file, with the boundary rule (strictly after, or on and after) written as in the plan, and the edges are tested on synthetic data.</li>
 <li><strong>Code that turns model output into reported numbers</strong> lives in named functions in <code>R/functions.R</code>, tested on synthetic data with a known answer.</li>
-<li><strong>Style:</strong> readable tidyverse code, following the tidyverse style guide: dplyr pipelines (<code>|&gt;</code>), one step per line; <code>case_when(.default = )</code> rather than nested <code>ifelse()</code>; select by name, never by position; checks are a <code>filter()</code> of the problem rows followed by <code>stop()</code> with a message that says what failed. Style changes go in their own commits.</li>
+<li><strong>Style:</strong> readable tidyverse code, following the tidyverse style guide: <a href="https://dplyr.tidyverse.org/">{dplyr}</a> pipelines (<code>|&gt;</code>), one step per line; <code>case_when(.default = )</code> rather than nested <code>ifelse()</code>; select by name, never by position; checks are a <code>filter()</code> of the problem rows followed by <code>stop()</code> with a message that says what failed. Style changes go in their own commits.</li>
 </ul>
 </section>
 <section id="checks-for-any-change" class="level2">

@@ -102,7 +102,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-66ae90e4418e9d0ac3caa4b8c3bef75c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9c6fd4a99ff4209dd1149a1765198857.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.js"></script>
 <link href="../site_libs/quarto-contrib/issue-comments-0.3.0/issue-comments.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -133,15 +133,15 @@ div.csl-indent {
   }
 }</script>
 <style>
-div.callout-Pending.callout {
-  border-left-color: #f0c400;
+div.callout-Rcode.callout {
+  border-left-color: #d63384;
 }
-div.callout-Pending.callout-style-default > .callout-header {
-  background-color: rgba(240, 196, 0, 0.13);
+div.callout-Rcode.callout-style-default > .callout-header {
+  background-color: rgba(214, 51, 132, 0.13);
 }
-div.callout-Pending .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-Pending.callout-style-default .callout-icon::before, div.callout-Pending.callout-titled .callout-icon::before {
-  content: '⏳';
+div.callout-Rcode .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode.callout-titled .callout-icon::before {
+  content: '💻';
   background-image: none;
 }
 div.callout-Results.callout {
@@ -155,15 +155,15 @@ div.callout-Results.callout-style-default .callout-icon::before, div.callout-Res
   content: '📊';
   background-image: none;
 }
-div.callout-Rcode.callout {
-  border-left-color: #d63384;
+div.callout-Pending.callout {
+  border-left-color: #f0c400;
 }
-div.callout-Rcode.callout-style-default > .callout-header {
-  background-color: rgba(214, 51, 132, 0.13);
+div.callout-Pending.callout-style-default > .callout-header {
+  background-color: rgba(240, 196, 0, 0.13);
 }
-div.callout-Rcode .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
-div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode.callout-titled .callout-icon::before {
-  content: '💻';
+div.callout-Pending .callout-toggle::before {  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(33, 37, 41)" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');}
+div.callout-Pending.callout-style-default .callout-icon::before, div.callout-Pending.callout-titled .callout-icon::before {
+  content: '⏳';
   background-image: none;
 }
 </style>
@@ -638,13 +638,13 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <td>None</td>
 </tr>
 <tr class="odd">
-<td>Base R compares a date-time with a date incorrectly. The original worked because <code>lubridate</code> was attached.</td>
+<td>Base R compares a date-time with a date incorrectly. The original worked because <a href="https://lubridate.tidyverse.org/">{lubridate}</a> was attached.</td>
 <td>Check added</td>
-<td><code>lubridate</code> stays attached in <a href="../quarto/setup.html">Setup</a>, and a test checks the comparison.</td>
+<td>{lubridate} stays attached in <a href="../quarto/setup.html">Setup</a>, and a test checks the comparison.</td>
 <td>None</td>
 </tr>
 <tr class="even">
-<td><code>ggplotly()</code> fails with ggplot2 4.0 or later in plotly before 4.11.0.</td>
+<td><code>ggplotly()</code> fails with <a href="https://ggplot2.tidyverse.org/">{ggplot2}</a> 4.0 or later in <a href="https://CRAN.R-project.org/package=plotly">{plotly}</a> before 4.11.0.</td>
 <td>Check added</td>
 <td>Setup stops at the start with an installation hint.</td>
 <td>None</td>
@@ -655,12 +655,6 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <section id="removed" class="level2">
 <h2 class="anchored" data-anchor-id="removed">Removed</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Original code</th>
@@ -671,7 +665,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 </thead>
 <tbody>
 <tr class="odd">
-<td>The <code>foreign</code> and <code>ggtext</code> packages were attached but not used.</td>
+<td>The <a href="https://CRAN.R-project.org/package=foreign">{foreign}</a> and <a href="https://wilkelab.org/ggtext/">{ggtext}</a> packages were attached but not used.</td>
 <td>Removed</td>
 <td>Not attached.</td>
 <td>None</td>
@@ -694,12 +688,6 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <section id="tables-and-figures" class="level2">
 <h2 class="anchored" data-anchor-id="tables-and-figures">Tables and figures</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Original code</th>
@@ -722,7 +710,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <td>None</td>
 </tr>
 <tr class="odd">
-<td>The match date was summarized by the gtsummary default of its version. The paper’s Table 2 shows the range; current gtsummary shows the median and interquartile range.</td>
+<td>The match date was summarized by the <a href="https://www.danieldsjoberg.com/gtsummary/">{gtsummary}</a> default of its version. The paper’s Table 2 shows the range; current {gtsummary} shows the median and interquartile range.</td>
 <td>Display only</td>
 <td>The range, as in the paper.</td>
 <td>None</td>
@@ -811,7 +799,7 @@ div.callout-Rcode.callout-style-default .callout-icon::before, div.callout-Rcode
 <tr class="even">
 <td>Methods: means and proportions, with Wilcoxon, chi-squared and Fisher’s exact tests.</td>
 <td>Paper differs from code</td>
-<td>Medians (interquartile range) and proportions, as the tables show, with gtsummary’s default tests, including Kruskal-Wallis for three-group comparisons.</td>
+<td>Medians (interquartile range) and proportions, as the tables show, with {gtsummary}’s default tests, including Kruskal-Wallis for three-group comparisons.</td>
 <td>Methods wording</td>
 </tr>
 <tr class="odd">
@@ -1393,14 +1381,14 @@ Swaminathan, Neeraja, Yoram A. Puius, Jonathan Czeresnia, et al. 2025. <span>“
 <span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Follow-up was <span class="in">`End_Date - Date_of_consent`</span>, whose units R chooses from the smallest difference in the column. With a candidate followed for less than a day, every candidate would have been expanded into seconds instead of days. <span class="pp">|</span> Check added <span class="pp">|</span> Stops unless follow-up is measured in days. <span class="pp">|</span> None; the published run had days <span class="pp">|</span></span>
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The link from offers to study IDs joined on every column the two tables share. <span class="pp">|</span> Check added <span class="pp">|</span> Joins on the last name only, and stops if the offers already have a study ID column or if the join would duplicate offers (two candidates with one last name). <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The expansion into candidate-days was not checked. <span class="pp">|</span> Check added <span class="pp">|</span> Checks that the days add up to each candidate's follow-up and that no candidate has two transplant days. <span class="pp">|</span> None <span class="pp">|</span></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Base R compares a date-time with a date incorrectly. The original worked because <span class="in">`lubridate`</span> was attached. <span class="pp">|</span> Check added <span class="pp">|</span> <span class="in">`lubridate`</span> stays attached in <span class="co">[</span><span class="ot">Setup</span><span class="co">](setup.qmd)</span>, and a test checks the comparison. <span class="pp">|</span> None <span class="pp">|</span></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`ggplotly()`</span> fails with ggplot2 4.0 or later in plotly before 4.11.0. <span class="pp">|</span> Check added <span class="pp">|</span> Setup stops at the start with an installation hint. <span class="pp">|</span> None <span class="pp">|</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Base R compares a date-time with a date incorrectly. The original worked because <span class="co">[</span><span class="ot">{lubridate}</span><span class="co">](https://lubridate.tidyverse.org/)</span> was attached. <span class="pp">|</span> Check added <span class="pp">|</span> {lubridate} stays attached in <span class="co">[</span><span class="ot">Setup</span><span class="co">](setup.qmd)</span>, and a test checks the comparison. <span class="pp">|</span> None <span class="pp">|</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`ggplotly()`</span> fails with <span class="co">[</span><span class="ot">{ggplot2}</span><span class="co">](https://ggplot2.tidyverse.org/)</span> 4.0 or later in <span class="co">[</span><span class="ot">{plotly}</span><span class="co">](https://CRAN.R-project.org/package=plotly)</span> before 4.11.0. <span class="pp">|</span> Check added <span class="pp">|</span> Setup stops at the start with an installation hint. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="fu">## Removed</span></span>
 <span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Original code <span class="pp">|</span> Kind <span class="pp">|</span> Rebuilt code <span class="pp">|</span> Effect on published results <span class="pp">|</span></span>
 <span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|</span></span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The <span class="in">`foreign`</span> and <span class="in">`ggtext`</span> packages were attached but not used. <span class="pp">|</span> Removed <span class="pp">|</span> Not attached. <span class="pp">|</span> None <span class="pp">|</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The <span class="co">[</span><span class="ot">{foreign}</span><span class="co">](https://CRAN.R-project.org/package=foreign)</span> and <span class="co">[</span><span class="ot">{ggtext}</span><span class="co">](https://wilkelab.org/ggtext/)</span> packages were attached but not used. <span class="pp">|</span> Removed <span class="pp">|</span> Not attached. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The timeline was drawn twice, the second time without being saved. <span class="pp">|</span> Removed <span class="pp">|</span> Drawn once. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Two tables were built only to be stacked, and marked "Don't use--columns stack in wrong order". <span class="pp">|</span> Removed <span class="pp">|</span> Not built. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
@@ -1410,7 +1398,7 @@ Swaminathan, Neeraja, Yoram A. Puius, Jonathan Czeresnia, et al. 2025. <span>“
 <span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|</span></span>
 <span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Tables showed variable names and FALSE/TRUE; the paper's tables were relabelled by hand. <span class="pp">|</span> Display only <span class="pp">|</span> The paper's row labels, column headers and category names, its column order, and a dagger on the refusal codes counted as potentially HIV-related, applied to copies of the data used only for display. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The data spell two categories "Unkown" and "Greather than zero". <span class="pp">|</span> Display only <span class="pp">|</span> Shown as "Unknown" and "Greater than zero", as in the paper. <span class="pp">|</span> None <span class="pp">|</span></span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The match date was summarized by the gtsummary default of its version. The paper's Table 2 shows the range; current gtsummary shows the median and interquartile range. <span class="pp">|</span> Display only <span class="pp">|</span> The range, as in the paper. <span class="pp">|</span> None <span class="pp">|</span></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The match date was summarized by the <span class="co">[</span><span class="ot">{gtsummary}</span><span class="co">](https://www.danieldsjoberg.com/gtsummary/)</span> default of its version. The paper's Table 2 shows the range; current {gtsummary} shows the median and interquartile range. <span class="pp">|</span> Display only <span class="pp">|</span> The range, as in the paper. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> A candidate followed only before, or only after, day 0 has no timeline segment on the other side. ggplot dropped it with a warning. <span class="pp">|</span> Display only <span class="pp">|</span> Dropped without a warning. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> One candidate has no end-of-follow-up marker on the timeline. <span class="pp">|</span> Kept as in the original <span class="pp">|</span> The same. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> A candidate consented exactly on day 0 would get no line on the timeline: the segment code handles days before and after day 0, not day 0 itself. <span class="pp">|</span> Kept as in the original <span class="pp">|</span> The same. The random shift never moves a day onto day 0 from before it, so the shift cannot create this case. <span class="pp">|</span> None <span class="pp">|</span></span>
@@ -1426,7 +1414,7 @@ Swaminathan, Neeraja, Yoram A. Puius, Jonathan Czeresnia, et al. 2025. <span>“
 <span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> "The proportion of organ declinations due to concern for donor quality was 75% (24/32)". <span class="pp">|</span> Paper differs from code <span class="pp">|</span> 32 is all pre-intervention offers; Table 2's percentages are of all offers. <span class="pp">|</span> Wording only <span class="pp">|</span></span>
 <span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 17 provisionally accepted offers "(13%)". <span class="pp">|</span> Paper differs from code <span class="pp">|</span> 17 of 122 is 13.9%. <span class="pp">|</span> Rounding <span class="pp">|</span></span>
 <span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Table 2's row "Organ was ultimately transplanted at another center". <span class="pp">|</span> Paper differs from code <span class="pp">|</span> Counts every offer whose donor's kidney was transplanted anywhere, including the offers transplanted at this center. <span class="pp">|</span> Row label <span class="pp">|</span></span>
-<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Methods: means and proportions, with Wilcoxon, chi-squared and Fisher's exact tests. <span class="pp">|</span> Paper differs from code <span class="pp">|</span> Medians (interquartile range) and proportions, as the tables show, with gtsummary's default tests, including Kruskal-Wallis for three-group comparisons. <span class="pp">|</span> Methods wording <span class="pp">|</span></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Methods: means and proportions, with Wilcoxon, chi-squared and Fisher's exact tests. <span class="pp">|</span> Paper differs from code <span class="pp">|</span> Medians (interquartile range) and proportions, as the tables show, with {gtsummary}'s default tests, including Kruskal-Wallis for three-group comparisons. <span class="pp">|</span> Methods wording <span class="pp">|</span></span>
 <span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> The periods are described by month: March 2018 to November 2020, and December 2020 to April 2022. <span class="pp">|</span> Paper differs from code <span class="pp">|</span> Offers and candidate-days are assigned by comparison with the exact intervention date, so the boundary need not fall at the start of a month. <span class="pp">|</span> None on the published numbers, which come from the code <span class="pp">|</span></span>
 <span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> R version 4.2.1 <span class="co">[</span><span class="ot">@rcoreteam2022r</span><span class="co">]</span>. <span class="pp">|</span> Paper differs from code <span class="pp">|</span> The version of the original's final run was not recorded. <span class="pp">|</span> None <span class="pp">|</span></span>
 <span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Offers are linked to candidates (not described). <span class="pp">|</span> Kept as in the original <span class="pp">|</span> By candidate last name. An identifier would be better practice; the name is used only inside the join. <span class="pp">|</span> None <span class="pp">|</span></span>
