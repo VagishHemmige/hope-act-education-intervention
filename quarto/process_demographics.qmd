@@ -36,7 +36,7 @@ Column names in snake case. The spreadsheet repeats the headings sex, race and e
 
 ## Recipient measures
 
-Panel reactive antibody classes I and II, and time on dialysis in years: years plus months divided by 12, with a missing month count taken as 0. `strex` takes the first and second numbers from text such as "5 years 4 months".
+Panel reactive antibody classes I and II, and time on dialysis in years: years plus months divided by 12, with a missing month count taken as 0. [{strex}](https://CRAN.R-project.org/package=strex) takes the first and second numbers from text such as "5 years 4 months".
 
 ```{r}
 #| label: derive-recipient-measures

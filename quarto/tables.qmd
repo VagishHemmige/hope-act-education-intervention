@@ -102,7 +102,7 @@ End status in the paper's column order, categories as the paper prints them, and
 
 ## Supplemental Table 1
 
-Candidate characteristics by end status: medians (interquartile range) and counts (%), with gtsummary's default tests.
+Candidate characteristics by end status: medians (interquartile range) and counts (%), with [{gtsummary}](https://www.danieldsjoberg.com/gtsummary/)'s default tests.
 
 ```{r}
 #| label: table-candidate-characteristics

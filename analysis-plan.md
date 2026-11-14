@@ -89,7 +89,7 @@ The pre-intervention period.
 
 All analyses use R; the version used for each run is recorded with its outputs.
 
-**Offer characteristics (paper Table 2).** Counts of distinct candidates and distinct donors with offers. The offer variables of section 7 summarized overall and by period, with tests by period, using `gtsummary` defaults: n (%) for categorical variables and range for the match date; Wilcoxon rank-sum for the date, and Pearson's chi-squared or Fisher's exact test for categorical variables, as `gtsummary` chooses.
+**Offer characteristics (paper Table 2).** Counts of distinct candidates and distinct donors with offers. The offer variables of section 7 summarized overall and by period, with tests by period, using [{gtsummary}](https://www.danieldsjoberg.com/gtsummary/) defaults: n (%) for categorical variables and range for the match date; Wilcoxon rank-sum for the date, and Pearson's chi-squared or Fisher's exact test for categorical variables, as {gtsummary} chooses.
 
 **Declined offers.** The same summary restricted to offers with acceptance No. Among declined offers, the share whose donor organ was transplanted, by period and by whether the decline was potentially HIV-related.
 
@@ -97,15 +97,15 @@ All analyses use R; the version used for each run is recorded with its outputs.
 
 **Open:** standard errors that account for repeated days within a candidate (the original Stata code clustered by candidate; the published R models did not), as an addition to the published models ([#3](https://github.com/VagishHemmige/hope-act-education-intervention/issues/3)).
 
-**Candidate characteristics (paper Supplemental Table 1).** Recipient age, sex, race, ethnicity, hepatitis C serology, time on dialysis (years plus months divided by 12), panel reactive antibody class I, and class II as zero or greater than zero, by end status, with an overall column: median (IQR) and n (%), with `gtsummary` default tests.
+**Candidate characteristics (paper Supplemental Table 1).** Recipient age, sex, race, ethnicity, hepatitis C serology, time on dialysis (years plus months divided by 12), panel reactive antibody class I, and class II as zero or greater than zero, by end status, with an overall column: median (IQR) and n (%), with {gtsummary} default tests.
 
-**Donor and transplant characteristics (paper Supplemental Table 2).** Among transplanted candidates, by donor HIV status: warm ischemia time (minutes), cold ischemia time (hours plus minutes divided by 60), donor sex, race, ethnicity, hepatitis C serology and age, donation after brain or cardiac death, and terminal creatinine; median (IQR) and n (%), with `gtsummary` default tests.
+**Donor and transplant characteristics (paper Supplemental Table 2).** Among transplanted candidates, by donor HIV status: warm ischemia time (minutes), cold ischemia time (hours plus minutes divided by 60), donor sex, race, ethnicity, hepatitis C serology and age, donation after brain or cardiac death, and terminal creatinine; median (IQR) and n (%), with {gtsummary} default tests.
 
 **Open:** whether the original code's alternative tables with means (SD), one-way ANOVA and t-tests, which were not published, are kept as unpublished extras or dropped ([#4](https://github.com/VagishHemmige/hope-act-education-intervention/issues/4)).
 
 **Patient timeline (paper Supplemental Figure 1).** For each candidate, follow-up before and after day 0 as line segments, with offers (declined; accepted but not transplanted; accepted and transplanted) and end events (transplant from a D− donor, death, permanent delisting, end of study period) as points, on a time axis of days from day 0. Published only as set out in section 10.
 
-**Missing data.** Analyses use the records as they are; no imputation. Each table reports missing values as `gtsummary` does by default.
+**Missing data.** Analyses use the records as they are; no imputation. Each table reports missing values as {gtsummary} does by default.
 
 ## 9. Sensitivity analyses
 

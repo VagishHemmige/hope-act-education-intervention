@@ -26,7 +26,7 @@ knitr::read_chunk("../R/setup.R")
 
 ## Packages
 
-The tidyverse and `lubridate` handle the data and dates, `readxl` reads the spreadsheets, `gtsummary` and `gt` build the tables, `janitor` and `strex` tidy the demographics spreadsheet, `plotly` makes the interactive timeline, and `yaml` reads the restricted parameters. `lubridate` must stay attached: base R compares a date-time with a date incorrectly, and the period assignment relies on `lubridate` getting it right.
+The [{tidyverse}](https://www.tidyverse.org/) and [{lubridate}](https://lubridate.tidyverse.org/) handle the data and dates, [{readxl}](https://readxl.tidyverse.org/) reads the spreadsheets, [{gtsummary}](https://www.danieldsjoberg.com/gtsummary/) and [{gt}](https://gt.rstudio.com/) build the tables, [{janitor}](https://sfirke.github.io/janitor/) and [{strex}](https://CRAN.R-project.org/package=strex) tidy the demographics spreadsheet, [{plotly}](https://CRAN.R-project.org/package=plotly) makes the interactive timeline, and [{yaml}](https://CRAN.R-project.org/package=yaml) reads the restricted parameters. {lubridate} must stay attached: base R compares a date-time with a date incorrectly, and the period assignment relies on {lubridate} getting it right.
 
 ```{r}
 #| label: load-packages
@@ -35,7 +35,7 @@ The tidyverse and `lubridate` handle the data and dates, `readxl` reads the spre
 
 ## Package versions
 
-`ggplotly()` in plotly versions before 4.11.0 fails with ggplot2 4.0 or later, with an error far from its cause. The run stops at the start instead, saying which version to install.
+`ggplotly()` in {plotly} versions before 4.11.0 fails with [{ggplot2}](https://ggplot2.tidyverse.org/) 4.0 or later, with an error far from its cause. The run stops at the start instead, saying which version to install.
 
 ```{r}
 #| label: check-package-versions

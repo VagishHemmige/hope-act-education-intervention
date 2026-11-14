@@ -64,14 +64,14 @@ organ_offers_processed <- apply_record_corrections(
 | Follow-up was `End_Date - Date_of_consent`, whose units R chooses from the smallest difference in the column. With a candidate followed for less than a day, every candidate would have been expanded into seconds instead of days. | Check added | Stops unless follow-up is measured in days. | None; the published run had days |
 | The link from offers to study IDs joined on every column the two tables share. | Check added | Joins on the last name only, and stops if the offers already have a study ID column or if the join would duplicate offers (two candidates with one last name). | None |
 | The expansion into candidate-days was not checked. | Check added | Checks that the days add up to each candidate's follow-up and that no candidate has two transplant days. | None |
-| Base R compares a date-time with a date incorrectly. The original worked because `lubridate` was attached. | Check added | `lubridate` stays attached in [Setup](setup.qmd), and a test checks the comparison. | None |
-| `ggplotly()` fails with ggplot2 4.0 or later in plotly before 4.11.0. | Check added | Setup stops at the start with an installation hint. | None |
+| Base R compares a date-time with a date incorrectly. The original worked because [{lubridate}](https://lubridate.tidyverse.org/) was attached. | Check added | {lubridate} stays attached in [Setup](setup.qmd), and a test checks the comparison. | None |
+| `ggplotly()` fails with [{ggplot2}](https://ggplot2.tidyverse.org/) 4.0 or later in [{plotly}](https://CRAN.R-project.org/package=plotly) before 4.11.0. | Check added | Setup stops at the start with an installation hint. | None |
 
 ## Removed
 
 | Original code | Kind | Rebuilt code | Effect on published results |
 |---|---|---|---|
-| The `foreign` and `ggtext` packages were attached but not used. | Removed | Not attached. | None |
+| The [{foreign}](https://CRAN.R-project.org/package=foreign) and [{ggtext}](https://wilkelab.org/ggtext/) packages were attached but not used. | Removed | Not attached. | None |
 | The timeline was drawn twice, the second time without being saved. | Removed | Drawn once. | None |
 | Two tables were built only to be stacked, and marked "Don't use--columns stack in wrong order". | Removed | Not built. | None |
 
@@ -81,7 +81,7 @@ organ_offers_processed <- apply_record_corrections(
 |---|---|---|---|
 | Tables showed variable names and FALSE/TRUE; the paper's tables were relabelled by hand. | Display only | The paper's row labels, column headers and category names, its column order, and a dagger on the refusal codes counted as potentially HIV-related, applied to copies of the data used only for display. | None |
 | The data spell two categories "Unkown" and "Greather than zero". | Display only | Shown as "Unknown" and "Greater than zero", as in the paper. | None |
-| The match date was summarized by the gtsummary default of its version. The paper's Table 2 shows the range; current gtsummary shows the median and interquartile range. | Display only | The range, as in the paper. | None |
+| The match date was summarized by the [{gtsummary}](https://www.danieldsjoberg.com/gtsummary/) default of its version. The paper's Table 2 shows the range; current {gtsummary} shows the median and interquartile range. | Display only | The range, as in the paper. | None |
 | A candidate followed only before, or only after, day 0 has no timeline segment on the other side. ggplot dropped it with a warning. | Display only | Dropped without a warning. | None |
 | One candidate has no end-of-follow-up marker on the timeline. | Kept as in the original | The same. | None |
 | A candidate consented exactly on day 0 would get no line on the timeline: the segment code handles days before and after day 0, not day 0 itself. | Kept as in the original | The same. The random shift never moves a day onto day 0 from before it, so the shift cannot create this case. | None |
@@ -97,7 +97,7 @@ organ_offers_processed <- apply_record_corrections(
 | "The proportion of organ declinations due to concern for donor quality was 75% (24/32)". | Paper differs from code | 32 is all pre-intervention offers; Table 2's percentages are of all offers. | Wording only |
 | 17 provisionally accepted offers "(13%)". | Paper differs from code | 17 of 122 is 13.9%. | Rounding |
 | Table 2's row "Organ was ultimately transplanted at another center". | Paper differs from code | Counts every offer whose donor's kidney was transplanted anywhere, including the offers transplanted at this center. | Row label |
-| Methods: means and proportions, with Wilcoxon, chi-squared and Fisher's exact tests. | Paper differs from code | Medians (interquartile range) and proportions, as the tables show, with gtsummary's default tests, including Kruskal-Wallis for three-group comparisons. | Methods wording |
+| Methods: means and proportions, with Wilcoxon, chi-squared and Fisher's exact tests. | Paper differs from code | Medians (interquartile range) and proportions, as the tables show, with {gtsummary}'s default tests, including Kruskal-Wallis for three-group comparisons. | Methods wording |
 | The periods are described by month: March 2018 to November 2020, and December 2020 to April 2022. | Paper differs from code | Offers and candidate-days are assigned by comparison with the exact intervention date, so the boundary need not fall at the start of a month. | None on the published numbers, which come from the code |
 | R version 4.2.1 [@rcoreteam2022r]. | Paper differs from code | The version of the original's final run was not recorded. | None |
 | Offers are linked to candidates (not described). | Kept as in the original | By candidate last name. An identifier would be better practice; the name is used only inside the join. | None |
